@@ -184,8 +184,4 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         raise NotImplementedError()
 
 
-    def on_action_artw(self,value):
-        # retrieve artwork
-        t = self.core.playback.get_current_tl_track()
-        return log.info("Current tl track: %s",t.track)
 
