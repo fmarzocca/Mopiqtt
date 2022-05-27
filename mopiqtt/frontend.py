@@ -70,7 +70,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         new_state (mopidy.core.PlaybackState) - the state after the change.
         """
         log.debug('MQTT playback state changed: %s', new_state)
-        self.mqtt.publish('sta', new_state)
+        self.mqtt.publish('plstate', new_state)
 
     def track_playback_started(self, tl_track):
         """
@@ -183,17 +183,9 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
 
         raise NotImplementedError()
 
-    def on_action_inf(self, value):
-        """Inquiries about specific information."""
-        if value == 'state':
-            return self.mqtt.publish('sta', self.current_state)
 
-        if value == 'volume':
-            return self.mqtt.publish('vol', str(self.volume))
+    def on_action_artw(self,value):
+        # retrieve artwork
+        t = self.core.playback.get_current_tl_track()
+        return log.info("Current tl track: %s",t)
 
-        if value == 'queue':
-            # TODO: Real current playlist info.
-            raise NotImplementedError()
-            return
-
-        log.warn('Unkown information request: %s', value)
