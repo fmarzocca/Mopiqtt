@@ -59,7 +59,7 @@ class Comms:
                 continue
 
             suffix = name[len(HANDLER_PREFIX):]
-            full_topic = '{}/c/{}'.format(self.topic, suffix)
+            full_topic = '{}/cmnd/{}'.format(self.topic, suffix)
             result, _ = self.client.subscribe(full_topic)
 
             if result == mqtt.MQTT_ERR_SUCCESS:
@@ -81,7 +81,7 @@ class Comms:
         handler(value=message.payload.decode('utf8'))
 
     def publish(self, subtopic, value):
-        full_topic = '{}/i/{}'.format(self.topic, subtopic)
+        full_topic = '{}/stat/{}'.format(self.topic, subtopic)
 
         log.debug('Publishing: %s to MQTT topic: %s', value, full_topic)
         return self.client.publish(topic=full_topic, payload=value)
