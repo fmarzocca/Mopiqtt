@@ -43,7 +43,7 @@ setup(
     ],
     entry_points={
         'mopidy.ext': [
-            'mqtt = mopiqtt:Extension',
+            'mopiqtt = mopiqtt:Extension',
         ],
     },
 )
