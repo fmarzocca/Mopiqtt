@@ -6,7 +6,7 @@ from mopidy.core import CoreListener
 from mopidy.audio import PlaybackState
 
 from .mqtt import Comms
-from .utils import describe_track, describe_stream
+from .utils import describe_track, describe_stream, get_track_artwork
 
 
 log = logging.getLogger(__name__)
@@ -25,6 +25,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         super(MQTTFrontend, self).__init__()
         self.core = core
         self.mqtt = Comms(frontend=self, **config['mopiqtt'])
+        self.defaultImage = "https://fakeimg.pl/350x300/C0C0C0/?text=No%20Image%20Avail."
 
     def on_start(self):
         """
@@ -78,6 +79,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         """
         log.debug('MQTT track started: %s', tl_track.track)
         self.mqtt.publish('trk', describe_track(tl_track.track))
+        self.mqtt.publish('artw', get_track_artwork(self, tl_track.track))
 
     def track_playback_ended(self, tl_track, time_position):
         """
