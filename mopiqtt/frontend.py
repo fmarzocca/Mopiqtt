@@ -24,7 +24,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         """
         super(MQTTFrontend, self).__init__()
         self.core = core
-        self.mqtt = Comms(frontend=self, **config['mqtt'])
+        self.mqtt = Comms(frontend=self, **config['mopiqtt'])
 
     def on_start(self):
         """
