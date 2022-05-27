@@ -1,0 +1,7 @@
+include *.txt
+include *.md
+include LICENSE
+include MANIFEST.in
+include mopiqtt/ext.conf
+include tox.ini
+recursive-include tests *.py
