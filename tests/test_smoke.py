@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 
 from __future__ import absolute_import
-from mopidy_mqtt import frontend, Extension
+from mopiqtt import frontend, Extension
 
 
 def test_extension():

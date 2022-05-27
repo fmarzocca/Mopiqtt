@@ -172,7 +172,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         # TODO: Add tracks to tracklist.
         raise NotImplementedError()
 
-    def on_action_clr(self, *_):
+    def on_action_clr(self, value):
         """Clear the queue (tracklist)."""
         return self.core.tracklist.clear()
 

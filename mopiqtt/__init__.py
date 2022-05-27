@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 class Extension(ext.Extension):
 
-    dist_name = 'Mopidy-MQTT-NG'
-    ext_name = 'mqtt'
+    dist_name = 'Mopiqtt'
+    ext_name = 'mopiqtt'
     version = __version__
 
     def get_default_config(self):
@@ -34,5 +34,5 @@ class Extension(ext.Extension):
         return schema
 
     def setup(self, registry):
-        from mopidy_mqtt.frontend import MQTTFrontend
+        from mopiqtt.frontend import MQTTFrontend
         registry.add('frontend', MQTTFrontend)
