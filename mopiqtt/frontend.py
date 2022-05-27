@@ -187,5 +187,6 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
     def on_action_artw(self,value):
         # retrieve artwork
         t = self.core.playback.get_current_tl_track()
-        return log.info("Current tl track: %s",t.track.uri)
+        (tlid, track) = t
+        return log.info("Current tl track: %s",track)
 
