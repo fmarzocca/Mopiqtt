@@ -24,17 +24,6 @@ setup(
     packages=find_packages(exclude=['tests', 'tests.*']),
     include_package_data=True,
     zip_safe=False,
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: End Users/Desktop',
-        'License :: OSI Approved :: Apache Software License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Topic :: Multimedia :: Sound/Audio :: Players',
-        'Environment :: No Input/Output (Daemon)',
-    ],
     install_requires=[
         'Mopidy >= 3.0',
         'paho-mqtt',
@@ -46,4 +35,15 @@ setup(
             'mopiqtt = mopiqtt:Extension',
         ],
     },
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: End Users/Desktop',
+        'License :: OSI Approved :: Apache Software License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+        'Topic :: Multimedia :: Sound/Audio :: Players',
+        'Environment :: No Input/Output (Daemon)',
+    ],
 )
