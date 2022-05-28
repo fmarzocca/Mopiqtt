@@ -174,11 +174,33 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         #items = self.core.playlists.get_items(value).get()[track.uri]
         #log.debug("Playlist tracks: %s", items)
         # TODO: Add tracks to tracklist.
-        return log.debug("End of action load") 
+        raise NotImplementedError() 
 
     def on_action_clr(self, value):
         """Clear the queue (tracklist)."""
         return self.core.tracklist.clear()
+
+    def on_action_src(self, value):
+        """Search tracks in library."""
+        if not value:
+            return log.warn('Cannot search without a query')
+
+        raise NotImplementedError()
+
+    def on_action_inf(self, value):
+        """Inquiries about specific information."""
+        if value == 'state':
+            return self.mqtt.publish('sta', self.current_state)
+
+        if value == 'volume':
+            return self.mqtt.publish('vol', str(self.volume))
+
+        if value == 'queue':
+            # TODO: Real current playlist info.
+            raise NotImplementedError()
+            return
+
+        log.warn('Unkown information request: %s', value)
 
 
 
