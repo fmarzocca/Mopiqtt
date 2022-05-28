@@ -171,19 +171,16 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
 
         self.core.tracklist.clear()
         # TODO: Read playlist (e.g. Spotify, streams)
+        items = self.core.playlists.get_items(value).get()[track.uri]
+        log.debug("Playlist tracks: %s", items)
         # TODO: Add tracks to tracklist.
-        raise NotImplementedError()
+        return 
 
     def on_action_clr(self, value):
         """Clear the queue (tracklist)."""
         return self.core.tracklist.clear()
 
-    def on_action_src(self, value):
-        """Search tracks in library."""
-        if not value:
-            return log.warn('Cannot search without a query')
 
-        raise NotImplementedError()
 
 
 
