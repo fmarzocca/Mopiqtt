@@ -8,7 +8,7 @@ Based on [mopidy-mqtt](https://github.com/odiroot/mopidy-mqtt)
 
 Using pip:
 ```
-pip install Mopiqtt
+python3 -m pip install Mopiqtt
 ```
 
 # Configuration
