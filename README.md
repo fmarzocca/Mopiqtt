@@ -81,7 +81,7 @@ Information topic `mopidy/stat`.
 | Request list of playlists | `/plist` | ` `                |
 
 ## Credits
-- Current maintainer: `fmarzocca <https://github.com/fmarzocca>`__
+- Current maintainer: [fmarzocca](https://github.com/fmarzocca)
 
 Based on previous works of:
 -  `odiroot <https://github.com/odiroot>` __
