@@ -77,7 +77,7 @@ Information topic `mopidy/stat`.
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
 | Clear queue      | `/clr`   | ` `                                                               |
 | Add to queue     | `/add`   | `<uri:str>`                                                       |
-| Load and play playlist   | `/pload` | `<uri:str>`                                               |
+| Load and play playlist (straight)  | `/pload` | `<uri:str>`                                               |
 | Request list of playlists | `/plist` | ` `                |
 
 
@@ -86,3 +86,6 @@ Information topic `mopidy/stat`.
 You can contribute to Mopiqtt by:
    
 [![paypal](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL)
+
+## Changelog
+
