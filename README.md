@@ -53,7 +53,7 @@ Control topic: `mopidy/cmnd`.
 
 Information topic `mopidy/stat`.
 
-## Messages to subscribe to (mopidy/stat/<msg>)
+## Messages to subscribe to (mopidy/stat/`<msg>`)
 
 |      Kind     |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
