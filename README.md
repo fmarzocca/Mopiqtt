@@ -61,7 +61,7 @@ Information topic `mopidy/stat`.
 | Volume        |   `/vol`  |               `<level:int>`               |
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 
-## Publishable messages (mopidy/cmnd/<msg>)
+## Publishable messages (mopidy/cmnd/`<msg>`)
 
 |       Kind       | Subtopic |                               Values                              |
 |:----------------:|:--------:|:-----------------------------------------------------------------:|
@@ -69,7 +69,7 @@ Information topic `mopidy/stat`.
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
 | Clear queue      | `/clr`   | ` `                                                               |
 | Add to queue     | `/add`   | `<uri:str>`                                                       |
-| Request info     | `/inf`   | `state` / `volume` / `queue`                                  |
+| Load playlist    | `/pload` | `<uri:str>`                                                       |
 
 Not implemented (yet!) 
 
