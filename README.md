@@ -86,3 +86,4 @@ Information topic `mopidy/stat`.
 .. image:: https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square
    :target: https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL
    
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL)
