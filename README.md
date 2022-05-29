@@ -60,7 +60,7 @@ Information topic `mopidy/stat`.
 | State         |   `/sta`  | `paused` / `stop` / `playing`             |
 | Volume        |   `/vol`  |               `<level:int>`               |
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
-| List of playlists | `plists` | `<array of playlists name:uri>`        |
+| List of playlists | `/plists` | `<array of playlists name:uri>`        |
 
 ## Publishable messages (mopidy/cmnd/`<msg>`)
 
@@ -71,5 +71,5 @@ Information topic `mopidy/stat`.
 | Clear queue      | `/clr`   | ` `                                                               |
 | Add to queue     | `/add`   | `<uri:str>`                                                       |
 | Load and play playlist   | `/pload` | `<uri:str>`                                               |
-| Request list of playlists | `plist` | ` `                |
+| Request list of playlists | `/plist` | ` `                |
 
