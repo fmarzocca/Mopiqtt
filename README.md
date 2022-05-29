@@ -34,12 +34,14 @@ MQTT broker requires authentication. If not, just leave blank the two values.
     - Playback status
     - Volume
     - Track description
+    - Playlists list
 * Reacts to control commands
     - Playback control
     - Tracklist control
     - Volume control
-    - Track search [WIP]
-* Responds to specific information inquiries
+    - Load & play a playlist
+    - Request playlists list
+
 
 # MQTT protocol
 
@@ -47,11 +49,11 @@ MQTT broker requires authentication. If not, just leave blank the two values.
 
 Default top level topic: `mopidy`.
 
-Control topic: `mopidy/c`.
+Control topic: `mopidy/cmnd`.
 
-Information topic `mopidy/i`.
+Information topic `mopidy/stat`.
 
-## Publishing
+## Messages to subscribe to (mopidy/stat/<msg>)
 
 |      Kind     |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
@@ -59,7 +61,7 @@ Information topic `mopidy/i`.
 | Volume        |   `/vol`  |               `<level:int>`               |
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 
-## Subscribing
+## Publishable messages (mopidy/cmnd/<msg>)
 
 |       Kind       | Subtopic |                               Values                              |
 |:----------------:|:--------:|:-----------------------------------------------------------------:|
