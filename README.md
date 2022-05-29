@@ -61,10 +61,11 @@ Information topic `mopidy/stat`.
 
 |      Kind     |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
-| State         |   `/sta`  | `paused` / `stop` / `playing`             |
+| Playback State|   `/plstate`  | `paused` / `stop` / `playing`             |
 | Volume        |   `/vol`  |               `<level:int>`               |
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
-| List of playlists | `/plists` | `<array of playlists name:uri>`        |
+| List of playlists | `/plists` | `<array of playlists name:uri>`       |
+| Track Artwork | `/artw`   |   `<url of image to download>`            |
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
 
