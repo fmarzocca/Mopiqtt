@@ -80,3 +80,9 @@ Information topic `mopidy/stat`.
 | Load and play playlist   | `/pload` | `<uri:str>`                                               |
 | Request list of playlists | `/plist` | ` `                |
 
+
+## Donations
+
+.. image:: https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square
+   :target: https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL
+   
