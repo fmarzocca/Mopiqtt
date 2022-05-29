@@ -65,7 +65,9 @@ Information topic `mopidy/stat`.
 | Volume        |   `/vol`  |               `<level:int>`               |
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
-| Track Artwork | `/artw`   |   `<url of image to download>`            | `ff`
+| Track Artwork (*)| `/artw`   |   `<url of image to download>`            | 
+
+`(*)` Published after any track started playback
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
 
