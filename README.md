@@ -28,6 +28,10 @@ password =
 *Note*: Remember to also supply `username` and `password` options if your
 MQTT broker requires authentication. If not, just leave blank the two values.
 
+*Note*: Restart Mopidy with `sudo service mopidy restart`
+
+To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
+
 # Features
 
 * Sends information about Mopidy state on any change
@@ -62,7 +66,7 @@ Information topic `mopidy/stat`.
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`        |
 
-## Publishable messages (mopidy/cmnd/`<msg>`)
+## Messages to publish to (mopidy/cmnd/`<msg>`)
 
 |       Kind       | Subtopic |                               Values                              |
 |:----------------:|:--------:|:-----------------------------------------------------------------:|
