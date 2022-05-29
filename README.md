@@ -81,6 +81,8 @@ Information topic `mopidy/stat`.
 | Request list of playlists | `/plist` | ` `                |
 
 
-## Donations
+## Contribute
+
+You can contribute to Mopiqtt by:
    
 [![paypal](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL)
