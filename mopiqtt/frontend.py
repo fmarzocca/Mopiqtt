@@ -164,7 +164,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         return self.core.tracklist.add(
             tracks=None, at_position=None, uri=str(value), uris=None)
 
-    def on_action_loa(self, value):
+    def on_action_pload(self, value):
         """Replace current queue with playlist from URI."""
         if not value:
             return log.warn('Cannot load unnamed playlist')
@@ -177,11 +177,18 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
             tracks.append(a.uri)
         self.core.tracklist.add(uris=tracks)
         self.core.playback.play()
+        log.debug("Started Playlist: %s", value)
          
 
     def on_action_clr(self, value):
         """Clear the queue (tracklist)."""
         return self.core.tracklist.clear()
+
+    def on_action_plist(self,value):
+        # Request a list of all playlist
+        plist=self.core.playlists.as_list()
+        for a in plist.get():
+            self.mqtt.publish("plists","%s;%s"%(a.name,a.uri) )
 
 
 
