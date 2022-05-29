@@ -69,5 +69,5 @@ Information topic `mopidy/stat`.
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
 | Clear queue      | `/clr`   | ` `                                                               |
 | Add to queue     | `/add`   | `<uri:str>`                                                       |
-| Load and play    |          |                                                                   |
+| Load and play                                                                                   |
 | playlist         | `/pload` | `<uri:str>`                                                       |
