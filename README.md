@@ -1,7 +1,7 @@
 Based on [mopidy-mqtt](https://github.com/odiroot/mopidy-mqtt)
 
 # Mopiqtt
- MQTT interface for Mopidy music server
+ MQTT interface for Mopidy music server. Allows easy integration with Node Red or any MQTT client.
 
 
 # Installation
