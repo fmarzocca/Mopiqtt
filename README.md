@@ -84,8 +84,8 @@ Information topic `mopidy/stat`.
 - Current maintainer: [fmarzocca](https://github.com/fmarzocca)
 
 Based on previous works of:
--  `odiroot <https://github.com/odiroot>` __
--   `magcode <https://github.com/magcode>` __
+-  [odiroot](https://github.com/odiroot)
+-  [magcode](https://github.com/magcode>)
 
 ## Contribute
 
