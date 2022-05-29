@@ -80,6 +80,12 @@ Information topic `mopidy/stat`.
 | Load and play playlist (straight)  | `/pload` | `<uri:str>`                                               |
 | Request list of playlists | `/plist` | ` `                |
 
+## Credits
+- Current maintainer: `fmarzocca <https://github.com/fmarzocca>`__
+
+Based on previous works of:
+-  `odiroot <https://github.com/odiroot>` __
+-   `magcode <https://github.com/magcode>` __
 
 ## Contribute
 
