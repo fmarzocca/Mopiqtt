@@ -8,23 +8,25 @@ Based on [mopidy-mqtt](https://github.com/odiroot/mopidy-mqtt)
 
 Using pip:
 ```
-pip install Mopidy-MQTT-NG
+pip install Mopiqtt
 ```
 
 # Configuration
 
-You have to at least configure the MQTT broker access.
-By default it's assumed to be installed locally.
+Add the following section to your mopidy's configuration file: `/etc/mopidy/mopidy.conf`
+
 
 ```
-[mqtt]
+[mopiqtt]
 host = <mqtt broker address>
 port = 1883
 topic = mopidy
+username =
+password =
 ```
 
 *Note*: Remember to also supply `username` and `password` options if your
-MQTT broker requires authentication.
+MQTT broker requires authentication. If not, just leave blank the two values.
 
 # Features
 
