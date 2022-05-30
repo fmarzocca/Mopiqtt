@@ -59,7 +59,7 @@ Information topic `mopidy/stat`.
 
 ## Messages to subscribe to (mopidy/stat/`<msg>`)
 
-|      Kind     |  Subtopic |                  Values                   |
+|               |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
 | Playback State|   `/plstate`  | `paused` / `stop` / `playing`         |
 | Volume        |   `/vol`  |               `<level:int>`               |
@@ -71,7 +71,7 @@ Information topic `mopidy/stat`.
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
 
-|       Kind       | Subtopic |                               Parameters                              |
+|                 | Subtopic |                               Parameters                              |
 |:----------------:|:--------:|:-----------------------------------------------------------------:|
 | Playback control | `/plb`   | `play` / `stop` / `pause` / `resume` / `toggle` / `prev` / `next` |
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
