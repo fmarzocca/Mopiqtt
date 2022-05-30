@@ -98,3 +98,6 @@ You can contribute to Mopiqtt by:
 
 **1.0.1**
 * First release
+
+**1.0.2**
+* Added `mopidy/cmnd/ploadshf` to load and play shuffled playlists
