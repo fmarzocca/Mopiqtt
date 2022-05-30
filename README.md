@@ -61,11 +61,11 @@ Information topic `mopidy/stat`.
 
 |      Kind     |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
-| Playback State|   `/plstate`  | `paused` / `stop` / `playing`             |
+| Playback State|   `/plstate`  | `paused` / `stop` / `playing`         |
 | Volume        |   `/vol`  |               `<level:int>`               |
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
-| Track Artwork (*)| `/artw`   |   `<url of image to download>`            | 
+| Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
 
 `(*)` Published after any track started playback
 
@@ -77,8 +77,9 @@ Information topic `mopidy/stat`.
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
 | Clear queue      | `/clr`   | ` `                                                               |
 | Add to queue     | `/add`   | `<uri:str>`                                                       |
-| Load and play playlist (straight)  | `/pload` | `<uri:str>`                                               |
-| Request list of playlists | `/plist` | ` `                |
+| Load and play playlist (straight)  | `/pload` | `<uri:str>`                                     |
+| Load and pla playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                                |   
+| Request list of playlists| `/plist` | ` `                                                       |
 
 ## Credits
 - Current maintainer: [fmarzocca](https://github.com/fmarzocca)
