@@ -71,7 +71,7 @@ Information topic `mopidy/stat`.
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
 
-|       Kind       | Subtopic |                               Values                              |
+|       Kind       | Subtopic |                               Parameters                              |
 |:----------------:|:--------:|:-----------------------------------------------------------------:|
 | Playback control | `/plb`   | `play` / `stop` / `pause` / `resume` / `toggle` / `prev` / `next` |
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
