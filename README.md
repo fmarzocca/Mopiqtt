@@ -96,5 +96,5 @@ You can contribute to Mopiqtt by:
 
 ## Changelog
 
-** 1.0.1
+**1.0.1**
 * First release
