@@ -43,7 +43,7 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
     - Playback control
     - Tracklist control
     - Volume control
-    - Load & play a playlist
+    - Load & play a playlist (straight or shuffle)
     - Request playlists list
 
 
