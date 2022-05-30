@@ -43,7 +43,7 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
     - Playback control
     - Tracklist control
     - Volume control
-    - Load & play a playlist
+    - Load & play a playlist (straight or shuffle)
     - Request playlists list
 
 
@@ -59,26 +59,27 @@ Information topic `mopidy/stat`.
 
 ## Messages to subscribe to (mopidy/stat/`<msg>`)
 
-|      Kind     |  Subtopic |                  Values                   |
+|               |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
-| Playback State|   `/plstate`  | `paused` / `stop` / `playing`             |
+| Playback State|   `/plstate`  | `paused` / `stop` / `playing`         |
 | Volume        |   `/vol`  |               `<level:int>`               |
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
-| Track Artwork (*)| `/artw`   |   `<url of image to download>`            | 
+| Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
 
 `(*)` Published after any track started playback
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
 
-|       Kind       | Subtopic |                               Values                              |
+|                 | Subtopic |                               Parameters                              |
 |:----------------:|:--------:|:-----------------------------------------------------------------:|
 | Playback control | `/plb`   | `play` / `stop` / `pause` / `resume` / `toggle` / `prev` / `next` |
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
 | Clear queue      | `/clr`   | ` `                                                               |
 | Add to queue     | `/add`   | `<uri:str>`                                                       |
-| Load and play playlist (straight)  | `/pload` | `<uri:str>`                                               |
-| Request list of playlists | `/plist` | ` `                |
+| Load and play playlist (straight)  | `/pload` | `<uri:str>`                                     |
+| Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                                |   
+| Request list of playlists| `/plist` | ` `                                                       |
 
 ## Credits
 - Current maintainer: [fmarzocca](https://github.com/fmarzocca)
@@ -95,3 +96,8 @@ You can contribute to Mopiqtt by:
 
 ## Changelog
 
+**1.0.1**
+* First release
+
+**1.0.2**
+* Added `mopidy/cmnd/ploadshf` to load and play shuffled playlists

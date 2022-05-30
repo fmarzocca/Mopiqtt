@@ -178,7 +178,22 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         self.core.tracklist.add(uris=tracks)
         self.core.playback.play()
         log.debug("Started Playlist: %s", value)
-         
+
+    def on_action_ploadshfl(self, value):
+        """Replace current queue with shuffled playlist from URI."""
+        if not value:
+            return log.warn('Cannot load unnamed playlist')
+
+        self.core.tracklist.clear()
+        #Read playlist (e.g. Spotify, Tidal, streams)
+        items = self.core.playlists.get_items(value)
+        tracks=[]
+        for a in items.get():
+            tracks.append(a.uri)
+        self.core.tracklist.add(uris=tracks)
+        self.core.tracklist.shuffle()
+        self.core.playback.play()
+        log.debug("Started shuffled Playlist: %s", value)         
 
     def on_action_clr(self, value):
         """Clear the queue (tracklist)."""
