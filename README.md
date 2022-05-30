@@ -78,7 +78,7 @@ Information topic `mopidy/stat`.
 | Clear queue      | `/clr`   | ` `                                                               |
 | Add to queue     | `/add`   | `<uri:str>`                                                       |
 | Load and play playlist (straight)  | `/pload` | `<uri:str>`                                     |
-| Load and pla playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                                |   
+| Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                                |   
 | Request list of playlists| `/plist` | ` `                                                       |
 
 ## Credits
