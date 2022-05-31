@@ -214,8 +214,10 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         # Request a list of all playlist
         plist=self.core.playlists.as_list()
         playlists = []
+        item = {}
         for a in plist.get():
-            playlists.append([a.name,a.uri])
+            item = {"name": a.name, "uri":a.uri}
+            playlists.append(item)
         self.mqtt.publish("plists",json.dumps(playlists))
         log.debug("Generated playlist list")
 
