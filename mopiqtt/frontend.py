@@ -8,7 +8,7 @@ from mopidy.audio import PlaybackState
 from .mqtt import Comms
 from .utils import describe_track, describe_stream, get_track_artwork
 
-
+import json
 log = logging.getLogger(__name__)
 
 
@@ -205,7 +205,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         playlists = []
         for a in plist.get():
             playlists.append([a.name,a.uri])
-        self.mqtt.publish("plists","%s"%playlists)
+        self.mqtt.publish("plists",json.dumps(playlists))
         log.debug("Generated playlist list")
 
 
