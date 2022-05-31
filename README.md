@@ -66,6 +66,7 @@ Information topic `mopidy/stat`.
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
+| TìPlaying track index | /trk-index |  ` {current: x, last: y}`        |
 
 `(*)` Published after any track started playback
 
@@ -104,4 +105,5 @@ You can contribute to Mopiqtt by:
 
 **1.0.3**
 * Better playlist list formatting
+* Introducing position of current playing track
 

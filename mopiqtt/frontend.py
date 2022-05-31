@@ -79,7 +79,18 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         """
         log.debug('MQTT track started: %s', tl_track.track)
         self.mqtt.publish('trk', describe_track(tl_track.track))
+        
+        # get track's artwork (if any)
         self.mqtt.publish('artw', get_track_artwork(self, tl_track.track))
+        
+        # get track playing indexes
+        curr = self.core.tracklist.index().get()
+        last = self.core.tracklist.get_length().get()
+        pl_index ={}
+        pl_index["current"]= curr+1
+        pl_index["last"]=last
+        pl_index = json.dumps(pl_index) 
+        self.mqtt.publish('trk-index',pl_index)
 
     def track_playback_ended(self, tl_track, time_position):
         """
