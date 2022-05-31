@@ -8,7 +8,7 @@ from mopidy.audio import PlaybackState
 from .mqtt import Comms
 from .utils import describe_track, describe_stream, get_track_artwork
 
-
+import json
 log = logging.getLogger(__name__)
 
 
@@ -79,7 +79,18 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         """
         log.debug('MQTT track started: %s', tl_track.track)
         self.mqtt.publish('trk', describe_track(tl_track.track))
+        
+        # get track's artwork (if any)
         self.mqtt.publish('artw', get_track_artwork(self, tl_track.track))
+        
+        # get track playing indexes
+        curr = self.core.tracklist.index().get()
+        last = self.core.tracklist.get_length().get()
+        pl_index ={}
+        pl_index["current"]= curr+1
+        pl_index["last"]=last
+        pl_index = json.dumps(pl_index) 
+        self.mqtt.publish('trk-index',pl_index)
 
     def track_playback_ended(self, tl_track, time_position):
         """
@@ -203,9 +214,11 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         # Request a list of all playlist
         plist=self.core.playlists.as_list()
         playlists = []
+        item = {}
         for a in plist.get():
-            playlists.append([a.name,a.uri])
-        self.mqtt.publish("plists","%s"%playlists)
+            item = {"name": a.name, "uri":a.uri}
+            playlists.append(item)
+        self.mqtt.publish("plists",json.dumps(playlists))
         log.debug("Generated playlist list")
 
 
