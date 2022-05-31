@@ -101,3 +101,7 @@ You can contribute to Mopiqtt by:
 
 **1.0.2**
 * Added `mopidy/cmnd/ploadshf` to load and play shuffled playlists
+
+**1.0.3**
+* Better playlist list formatting
+
