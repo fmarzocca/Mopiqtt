@@ -82,21 +82,21 @@ Information topic `mopidy/stat`.
 | Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                                |   
 | Request list of playlists| `/plist` | ` `                                                       |
 
-## Credits
+# Credits
 - Current maintainer: [fmarzocca](https://github.com/fmarzocca)
 
 Based on previous works of:
 -  [odiroot](https://github.com/odiroot)
 -  [magcode](https://github.com/magcode>)
 
-## Contribute
+# Contribute
 
 You can contribute to Mopiqtt by:
    
 [![paypal](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL)
 
 
-## Changelog
+# Changelog
 [![Downloads](https://pepy.tech/badge/mopiqtt)](https://pepy.tech/project/mopiqtt)
 
 **1.0.1**
