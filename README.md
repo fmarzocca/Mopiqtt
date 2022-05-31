@@ -95,6 +95,8 @@ You can contribute to Mopiqtt by:
    
 [![paypal](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL)
 
+[![Downloads](https://pepy.tech/badge/mopiqtt)](https://pepy.tech/project/mopiqtt)
+
 ## Changelog
 
 **1.0.1**
