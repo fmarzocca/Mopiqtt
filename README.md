@@ -66,7 +66,7 @@ Information topic `mopidy/stat`.
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
-| Playing track index (*)| /trk-index |  ` {current: x, last: y}`        |
+| Playing track index (*)| `/trk-index` |  ` {current: x, last: y}`        |
 
 `(*)` Published after any track started playback
 
