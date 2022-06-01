@@ -109,3 +109,5 @@ You can contribute to Mopiqtt by:
 * Better playlist list formatting **Breaking change:** Now the list is an array of objects
 * Introducing position of current playing track
 
+**1.0.4**
+* Fixed bug on `mopidy/cmnd/add`

@@ -172,8 +172,10 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         if not value:
             return log.warn('Cannot add empty track to queue')
 
-        return self.core.tracklist.add(
-            tracks=None, at_position=None, uri=str(value), uris=None)
+        track=[]
+        track.append(value)
+        self.core.tracklist.add(uris=track)
+        log.debug("Added track: %s",value)
 
     def on_action_pload(self, value):
         """Replace current queue with playlist from URI."""
