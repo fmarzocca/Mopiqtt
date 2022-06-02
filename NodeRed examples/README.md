@@ -6,7 +6,7 @@ Few example nodes in Node-Red (self explaining):
 
 <img src="https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/few_nodes.png" width=700>
 
-![Sample image 2](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playback.png)
+<img src="https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playback.png" width=700>
 
 ![Sample image 3](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playlists.png)
 
