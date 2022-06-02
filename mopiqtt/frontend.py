@@ -115,6 +115,11 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         log.debug('MQTT title changed: %s', title)
         self.mqtt.publish('trk', describe_stream(title))
 
+    def playlists_loaded(self):
+        log.debug('Playlists loaded event')
+        self.mqtt.publish('refreshed', '')
+
+
     def on_action_plb(self, value):
         """Playback control."""
         if value == 'play':
@@ -172,8 +177,22 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         if not value:
             return log.warn('Cannot add empty track to queue')
 
-        return self.core.tracklist.add(
-            tracks=None, at_position=None, uri=str(value), uris=None)
+        track=[]
+        track.append(value)
+        self.core.tracklist.add(uris=track)
+        log.debug("Added track: %s",value)
+
+    def on_action_pstream(self, value):
+        """Load and start a radio stream or a single track (tracklist)."""
+        if not value:
+            return log.warn('Cannot load empty track to queue')
+
+        track=[]
+        track.append(value)
+        self.core.tracklist.clear()
+        self.core.tracklist.add(uris=track)
+        self.core.playback.play()
+        log.debug("Started track: %s",value)
 
     def on_action_pload(self, value):
         """Replace current queue with playlist from URI."""
@@ -191,7 +210,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         log.debug("Started Playlist: %s", value)
 
     def on_action_ploadshfl(self, value):
-        """Replace current queue with shuffled playlist from URI."""
+        #Replace current queue with shuffled playlist from URI.
         if not value:
             return log.warn('Cannot load unnamed playlist')
 
@@ -220,6 +239,17 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
             playlists.append(item)
         self.mqtt.publish("plists",json.dumps(playlists))
         log.debug("Generated playlist list")
+
+    def on_action_plrefresh (self, value):
+        # refresh a single playlist or all
+        # value = uri_scheme, if value=None, all playlists are refreshed
+        self.core.playlists.refresh(uri_scheme=value)
+        if value:
+            log.debug ("Refreshed playlists with uri_scheme: %s",value)
+        else:
+            log.debug("Refreshed all playlists")
+
+
 
 
 
