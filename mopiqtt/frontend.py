@@ -245,10 +245,10 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         # value = uri_scheme, if value=None, all playlists are refreshed
         self.core.playlists.refresh(uri_scheme=value)
         if value:
-            log.debug("Refreshed all playlists")
-        else:
             log.debug ("Refreshed playlists with uri_scheme: %s",value)
-            
+        else:
+            log.debug("Refreshed all playlists")
+
 
 
 

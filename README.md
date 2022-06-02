@@ -86,6 +86,9 @@ Information topic `mopidy/stat`.
 | Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                               |   
 | Request list of playlists| `/plist` | ` `                                                       |
 | Load and play a radio stream (or a single track) | `/pstream`| `<uri:str>`                      |
+| Refresh one or all playlists (*)| `/plrefresh` | `uri_scheme` or ``                             |
+
+`(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.
 
 # Credits
 - Current maintainer: [fmarzocca](https://github.com/fmarzocca)
