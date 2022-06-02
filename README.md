@@ -2,7 +2,7 @@ Based on [mopidy-mqtt](https://github.com/odiroot/mopidy-mqtt)
 
 # Mopiqtt
  MQTT interface for Mopidy music server. Allows easy integration with Node Red or any MQTT client.
- This package is mainly useful to Node Red users, who can embed in their flows a full control over Mopidy by simple mqtt-in or mqtt-out nodes. Of course, it can be used by any other MQTT client too.
+ This package is mainly useful to Node Red users, who can embed in their flows a full control over Mopidy by simple mqtt-in or mqtt-out nodes. See [Node Red examples](https://github.com/fmarzocca/Mopiqtt/tree/Development/NodeRed%20examples). Of course, it can be used by any other MQTT client too.
 
 
 # Installation
