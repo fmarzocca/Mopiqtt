@@ -203,8 +203,11 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         #Read playlist (e.g. Spotify, Tidal, streams)
         items = self.core.playlists.get_items(value)
         tracks=[]
-        for a in items.get():
-            tracks.append(a.uri)
+        try:
+            for a in items.get():
+                tracks.append(a.uri)
+        except ValueError:
+            return log.info("Invalid playlist: %s",value)
         self.core.tracklist.add(uris=tracks)
         self.core.playback.play()
         log.debug("Started Playlist: %s", value)
@@ -218,8 +221,11 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         #Read playlist (e.g. Spotify, Tidal, streams)
         items = self.core.playlists.get_items(value)
         tracks=[]
-        for a in items.get():
-            tracks.append(a.uri)
+        try:
+            for a in items.get():
+                tracks.append(a.uri)
+        except ValueError:
+            return log.info("Invalid playlist: %s",value)
         self.core.tracklist.add(uris=tracks)
         self.core.tracklist.shuffle()
         self.core.playback.play()

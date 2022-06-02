@@ -124,4 +124,8 @@ You can contribute to Mopiqtt by:
 * Added `mopidy/stat/refreshed` event when playlists have been refreshed
 * Added `mopidy/stat/plrefresh` to refresh one or all playlists
 
+**1.0.5**
+* Improved error catching
+
+
 
