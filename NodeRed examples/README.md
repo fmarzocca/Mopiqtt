@@ -4,4 +4,13 @@ This package is mainly useful to Node Red users, who can embed in their flows a 
 
 Few example nodes in Node-Red (self explaining):
 
-![Sample image 1 1](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/few_nodes.png)
+![Sample image 1](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/few_nodes.png)
+
+![Sample image 2](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playback.png)
+
+![Sample image 3](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playlists.png)
+
+A dashboard example:
+
+![Sample image 3](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/dashboard.png)
+
