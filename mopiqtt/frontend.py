@@ -117,6 +117,8 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
 
     def playlists_loaded(self):
         log.debug('Playlists loaded event')
+        self.mqtt.publish('refreshed', '')
+
 
     def on_action_plb(self, value):
         """Playback control."""
@@ -208,7 +210,7 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         log.debug("Started Playlist: %s", value)
 
     def on_action_ploadshfl(self, value):
-        """Replace current queue with shuffled playlist from URI."""
+        #Replace current queue with shuffled playlist from URI.
         if not value:
             return log.warn('Cannot load unnamed playlist')
 
@@ -237,6 +239,17 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
             playlists.append(item)
         self.mqtt.publish("plists",json.dumps(playlists))
         log.debug("Generated playlist list")
+
+    def on_action_plrefresh (self, value):
+        # refresh a single playlist or all
+        # value = uri_scheme, if value=None, all playlists are refreshed
+        self.core.playlists.refresh(uri_scheme=value)
+        if value:
+            log.debug("Refreshed all playlists")
+        else:
+            log.debug ("Refreshed playlists with uri_scheme: %s",value)
+            
+
 
 
 
