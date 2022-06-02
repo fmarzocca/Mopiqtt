@@ -4,7 +4,7 @@ This package is mainly useful to Node Red users, who can embed in their flows a 
 
 Few example nodes in Node-Red (self explaining):
 
-![Sample image 1](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/few_nodes.png)
+<img src="https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/few_nodes.png" width=700>
 
 ![Sample image 2](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playback.png)
 
