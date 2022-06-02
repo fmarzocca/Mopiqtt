@@ -40,6 +40,8 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
     - Volume
     - Track description
     - Playlists list
+    - Artwork
+    - Track index
 * Reacts to control commands
     - Playback control
     - Tracklist control
