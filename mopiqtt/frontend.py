@@ -177,6 +177,18 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         self.core.tracklist.add(uris=track)
         log.debug("Added track: %s",value)
 
+    def on_action_pstream(self, value):
+        """Load and start a radio stream or a single track (tracklist)."""
+        if not value:
+            return log.warn('Cannot load empty track to queue')
+
+        track=[]
+        track.append(value)
+        self.core.tracklist.clear()
+        self.core.tracklist.add(uris=track)
+        self.core.playback.play()
+        log.debug("Started track: %s",value)
+
     def on_action_pload(self, value):
         """Replace current queue with playlist from URI."""
         if not value:
