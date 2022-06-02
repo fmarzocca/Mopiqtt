@@ -115,8 +115,8 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         log.debug('MQTT title changed: %s', title)
         self.mqtt.publish('trk', describe_stream(title))
 
-    def playlists_loaded(self, value):
-        log.debug('Playlists loaded event: %s', value)
+    def playlists_loaded(self):
+        log.debug('Playlists loaded event')
 
     def on_action_plb(self, value):
         """Playback control."""

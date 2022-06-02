@@ -69,7 +69,8 @@ Information topic `mopidy/stat`.
 | Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
-| Playing track index (*)| `/trk-index` |  ` {current: x, last: y}`        |
+| Playing track index (*)| `/trk-index` |  ` {current: x, last: y}`     |
+| Playlists have been refreshed | `/refreshed` | ` `                    |
 
 `(*)` Published after any track started playback
 
@@ -116,3 +117,5 @@ You can contribute to Mopiqtt by:
 **1.0.4**
 * Fixed bug on `mopidy/cmnd/add`
 * Added `mopidy/cmnd/pstream` to load and play a radio stream (or any single track)
+* Added `mopidy/stat/refreshed` event when playlists have been refreshed
+
