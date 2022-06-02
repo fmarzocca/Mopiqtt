@@ -84,7 +84,7 @@ Information topic `mopidy/stat`.
 | Load and play playlist (straight)  | `/pload` | `<uri:str>`                                     |
 | Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                               |   
 | Request list of playlists| `/plist` | ` `                                                       |
-| Load and play a radio stream (or a single track) | `/pstream`                                   |
+| Load and play a radio stream (or a single track) | `/pstream`| `<uri:str>`                      |
 
 # Credits
 - Current maintainer: [fmarzocca](https://github.com/fmarzocca)
