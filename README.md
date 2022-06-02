@@ -48,6 +48,7 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
     - Volume control
     - Load & play a playlist (straight or shuffle)
     - Request playlists list
+    - Refresh playlists
 
 
 # MQTT protocol
