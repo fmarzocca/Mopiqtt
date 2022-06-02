@@ -115,3 +115,4 @@ You can contribute to Mopiqtt by:
 
 **1.0.4**
 * Fixed bug on `mopidy/cmnd/add`
+* Added `mopidy/cmnd/pstream` to load and play a radio stream (or any single track)
