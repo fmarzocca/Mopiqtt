@@ -255,6 +255,24 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         else:
             log.debug("Refreshed all playlists")
 
+    def on_action_trklist(self,value):
+        # get list of all tracks in the queue
+        tk_list = self.core.tracklist.get_tracks().get()
+        tracks =[]
+        item = {}
+        for a in tk_list:
+            if a.artists:
+                artist = next(iter(a.artists)).name
+                item = {"name":artist+" - "+a.name,"uri":a.uri}
+            else:
+                item = {"name":a.name,"uri":a.uri}
+            tracks.append(item)
+        self.mqtt.publish("trklist",json.dumps(tracks))
+        log.debug("Generated queue tracklist list")
+
+
+
+
 
 
 
