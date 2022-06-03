@@ -94,7 +94,7 @@ Information topic `mopidy/stat`.
 | Change current playing track in queue  (**)| `/chgtrk` |    `<uri:str>`                         |
 
 
-`(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.
+`(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  
 `(**)` Note that the track must already be in the tracklist.
 
 # Credits
