@@ -91,8 +91,11 @@ Information topic `mopidy/stat`.
 | Load and play a radio stream (or a single track) | `/pstream`| `<uri:str>`                      |
 | Refresh one or all playlists (*)| `/plrefresh` | `<uri_scheme>` or `None`                       |
 | Request the list of tracks in the queue  | `/trklist` |                                         |
+| Change current playing track in queue  (**)| `/chgtrk` |    `<uri:str>`                         |
+
 
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.
+`(**)` Note that the track must already be in the tracklist.
 
 # Credits
 - Current maintainer: [fmarzocca](https://github.com/fmarzocca)
@@ -131,6 +134,7 @@ You can contribute to Mopiqtt by:
 * Improved error catching
 * Added `mopidy/cmnd/trklist` to ask for the list of tracks in the queue
 * Added `mopidy/stat/trklist` event to show the list of tracks in the queue
+* Added `mopidy/stat/chgtrk` to change current playing track in tracklist
 
 
 

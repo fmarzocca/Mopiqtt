@@ -270,9 +270,17 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         self.mqtt.publish("trklist",json.dumps(tracks))
         log.debug("Generated queue tracklist list")
 
+    def on_action_chgtrk(self,value):
+        # change current playing track in the queue
+        if not value:
+            return log.info('chgtrk: Cannot change track to empty uri')
 
-
-
+        flt = self.core.tracklist.filter(criteria={'uri':[value]}).get()
+        if not flt:
+            return log.info('chgtrk: Invalid track')
+        (tlid,trk) = flt[0]
+        self.core.playback.play(tlid=tlid)
+        log.debug("Changed track to tlid: %s",tlid)
 
 
 
