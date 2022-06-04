@@ -12,5 +12,5 @@ Few example nodes in Node-Red (self explaining):
 
 A dashboard example:
 
-<img src="https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/dashboard.png" width="400">
+<img src="https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/dashboard1.png" width="400">
 
