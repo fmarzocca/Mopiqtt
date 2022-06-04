@@ -138,5 +138,6 @@ You can contribute to Mopiqtt by:
 
 **1.0.6**
 * Fixed bug on `mopidy/cmnd/plrefresh`
+* Class name renaming
 
 
