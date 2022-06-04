@@ -34,5 +34,5 @@ class Extension(ext.Extension):
         return schema
 
     def setup(self, registry):
-        from mopiqtt.frontend import MQTTFrontend
-        registry.add('frontend', MQTTFrontend)
+        from mopiqtt.frontend import MopiqttFrontend
+        registry.add('frontend', MopiqttFrontend)
