@@ -65,6 +65,26 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
     def current_state(self):
         return self.core.playback.get_state().get()
 
+    def tracklist_changed(self):
+        # reports any change to the current tracklist
+        # and triggers trklist
+        log.debug('MQTT tracklist changed')
+        #
+        # get list of all tracks in the queue
+        #
+        tk_list = self.core.tracklist.get_tracks().get()
+        tracks =[]
+        item = {}
+        for a in tk_list:
+            if a.artists:
+                artist = next(iter(a.artists)).name
+                item = {"name":artist+" - "+a.name,"uri":a.uri}
+            else:
+                item = {"name":a.name,"uri":a.uri}
+            tracks.append(item)
+        self.mqtt.publish("trklist",json.dumps(tracks))
+        log.debug("Generated tracklist list")
+
     def playback_state_changed(self, old_state, new_state):
         """
         old_state (mopidy.core.PlaybackState) - the state before the change.
@@ -254,21 +274,6 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
             log.debug ("Refreshed playlists with uri_scheme: %s",value)
         else:
             log.debug("Refreshed all playlists")
-
-    def on_action_trklist(self,value):
-        # get list of all tracks in the queue
-        tk_list = self.core.tracklist.get_tracks().get()
-        tracks =[]
-        item = {}
-        for a in tk_list:
-            if a.artists:
-                artist = next(iter(a.artists)).name
-                item = {"name":artist+" - "+a.name,"uri":a.uri}
-            else:
-                item = {"name":a.name,"uri":a.uri}
-            tracks.append(item)
-        self.mqtt.publish("trklist",json.dumps(tracks))
-        log.debug("Generated queue tracklist list")
 
     def on_action_chgtrk(self,value):
         # change current playing track in the queue

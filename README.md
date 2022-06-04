@@ -50,6 +50,7 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
     - Load & play a playlist (straight or shuffle)
     - Request playlists list
     - Refresh playlists
+    - Get tracklist
 
 
 # MQTT protocol
@@ -73,9 +74,10 @@ Information topic `mopidy/stat`.
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
 | Playing track index (*)| `/trk-index` |  ` {current: x, last: y}`     |
 | Playlists have been refreshed | `/refreshed` | ` `                    |
-| List of tracks in the queue   | `/trklist` | `<array of tracks name:uri>` |
+| List of tracks in the queue(**)   | `/trklist` | `<array of tracks name:uri>` |
 
-`(*)` Published after any track started playback
+`(*)`  Published after any track started playback  
+`(**)` Published after any tracklist change
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
 
@@ -89,9 +91,8 @@ Information topic `mopidy/stat`.
 | Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                               |   
 | Request list of playlists| `/plist` | ` `                                                       |
 | Load and play a radio stream (or a single track) | `/pstream`| `<uri:str>`                      |
-| Refresh one or all playlists(*)| `/plrefresh` | `<uri_scheme>` or `None`                       |
-| Request the list of tracks in the queue  | `/trklist` |                                         |
-| Change current playing track(**)| `/chgtrk` |    `<uri:str>`                         |
+| Refresh one or all playlists(*)| `/plrefresh` | `<uri_scheme>` or `None`                        |
+| Change current playing track(**)| `/chgtrk` |    `<uri:str>`                                    |
 
 
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  
@@ -132,9 +133,8 @@ You can contribute to Mopiqtt by:
 
 **1.0.5**
 * Improved error catching
-* Added `mopidy/cmnd/trklist` to ask for the list of tracks in the queue
-* Added `mopidy/stat/trklist` event to show the list of tracks in the queue
-* Added `mopidy/stat/chgtrk` to change current playing track in tracklist
+* Added `mopidy/stat/trklist` message showing the list of tracks in the queue
+* Added `mopidy/cmnd/chgtrk`  to change current playing track in tracklist
 
 
 
