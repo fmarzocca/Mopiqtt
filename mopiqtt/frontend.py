@@ -65,6 +65,26 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
     def current_state(self):
         return self.core.playback.get_state().get()
 
+    def tracklist_changed(self):
+        # reports any change to the current tracklist
+        # and triggers trklist
+        log.debug('MQTT tracklist changed')
+        #
+        # get list of all tracks in the queue
+        #
+        tk_list = self.core.tracklist.get_tracks().get()
+        tracks =[]
+        item = {}
+        for a in tk_list:
+            if a.artists:
+                artist = next(iter(a.artists)).name
+                item = {"name":artist+" - "+a.name,"uri":a.uri}
+            else:
+                item = {"name":a.name,"uri":a.uri}
+            tracks.append(item)
+        self.mqtt.publish("trklist",json.dumps(tracks))
+        log.debug("Generated tracklist list")
+
     def playback_state_changed(self, old_state, new_state):
         """
         old_state (mopidy.core.PlaybackState) - the state before the change.
@@ -203,8 +223,11 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         #Read playlist (e.g. Spotify, Tidal, streams)
         items = self.core.playlists.get_items(value)
         tracks=[]
-        for a in items.get():
-            tracks.append(a.uri)
+        try:
+            for a in items.get():
+                tracks.append(a.uri)
+        except ValueError:
+            return log.info("Invalid playlist: %s",value)
         self.core.tracklist.add(uris=tracks)
         self.core.playback.play()
         log.debug("Started Playlist: %s", value)
@@ -218,8 +241,11 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         #Read playlist (e.g. Spotify, Tidal, streams)
         items = self.core.playlists.get_items(value)
         tracks=[]
-        for a in items.get():
-            tracks.append(a.uri)
+        try:
+            for a in items.get():
+                tracks.append(a.uri)
+        except ValueError:
+            return log.info("Invalid playlist: %s",value)
         self.core.tracklist.add(uris=tracks)
         self.core.tracklist.shuffle()
         self.core.playback.play()
@@ -249,6 +275,17 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
         else:
             log.debug("Refreshed all playlists")
 
+    def on_action_chgtrk(self,value):
+        # change current playing track in the queue
+        if not value:
+            return log.info('chgtrk: Cannot change track to empty uri')
+
+        flt = self.core.tracklist.filter(criteria={'uri':[value]}).get()
+        if not flt:
+            return log.info('chgtrk: Invalid track')
+        (tlid,trk) = flt[0]
+        self.core.playback.play(tlid=tlid)
+        log.debug("Changed track to tlid: %s",tlid)
 
 
 
