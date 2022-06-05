@@ -98,12 +98,6 @@ Information topic `mopidy/stat`.
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  
 `(**)` Note that the track must already be in the tracklist.
 
-# Credits
-- Current maintainer: [fmarzocca](https://github.com/fmarzocca)
-
-Based on previous works of:
--  [odiroot](https://github.com/odiroot)
--  [magcode](https://github.com/magcode>)
 
 # Contribute
 
@@ -111,33 +105,17 @@ You can contribute to Mopiqtt by:
    
 [![paypal](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://www.paypal.com/donate/?hosted_button_id=NQHVVDCNK3UDL)
 
+# Credits
+- Current maintainer: [fmarzocca](https://github.com/fmarzocca)
 
-# Changelog
+Based on previous works of:
+-  [odiroot](https://github.com/odiroot)
+-  [magcode](https://github.com/magcode>)
+
+# Project resources
 [![Downloads](https://pepy.tech/badge/mopiqtt)](https://pepy.tech/project/mopiqtt)
 
-**1.0.1**
-* First release
-
-**1.0.2**
-* Added `mopidy/cmnd/ploadshf` to load and play shuffled playlists
-
-**1.0.3**
-* Better playlist list formatting **Breaking change:** Now the list is an array of objects
-* Introducing position of current playing track
-
-**1.0.4**
-* Fixed bug on `mopidy/cmnd/add`
-* Added `mopidy/cmnd/pstream` to load and play a radio stream (or any single track)
-* Added `mopidy/stat/refreshed` event when playlists have been refreshed
-* Added `mopidy/stat/plrefresh` to refresh one or all playlists
-
-**1.0.5**
-* Improved error catching
-* Added `mopidy/stat/trklist` message showing the list of tracks in the queue
-* Added `mopidy/cmnd/chgtrk`  to change current playing track in tracklist
-
-**1.0.6**
-* Fixed bug on `mopidy/cmnd/plrefresh`
-* Class name renaming
-
-
+- [Source code](<https://github.com/fmarzocca/mopiqtt>)
+- [Issue tracker](<https://github.com/fmarzocca/mopiqtt/issues>)
+- [Changelog](<https://github.com/fmarzocca/mopiqtt/CHANGELOG.md>)
+    
