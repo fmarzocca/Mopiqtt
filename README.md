@@ -117,4 +117,4 @@ Based on previous works of:
 
 - [Source code](<https://github.com/fmarzocca/mopiqtt>)
 - [Issue tracker](<https://github.com/fmarzocca/mopiqtt/issues>)
-- [Changelog](<https://github.com/fmarzocca/mopiqtt/blob/Development/CHANGELOG.md>)
+- [Changelog](<https://github.com/fmarzocca/mopiqtt/blob/main/CHANGELOG.md>)
