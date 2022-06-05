@@ -6,11 +6,11 @@ Few example nodes in Node-Red (self explaining):
 
 <img src="https://github.com/fmarzocca/Mopiqtt/blob/main/NodeRed%20examples/images/few_nodes.png" width=700>
 
-<img src="https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playback.png" width=700>
+<img src="https://github.com/fmarzocca/Mopiqtt/blob/main/NodeRed%20examples/images/playback.png" width=700>
 
 ![Sample image 3](https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/playlists.png)
 
 A dashboard example:
 
-<img src="https://github.com/fmarzocca/Mopiqtt/blob/Development/NodeRed%20examples/images/dashboard1.png" width="400">
+<img src="https://github.com/fmarzocca/Mopiqtt/blob/main/NodeRed%20examples/images/dashboard1.png" width="400">
 
