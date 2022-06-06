@@ -21,7 +21,7 @@
 * Added `mopidy/stat/trklist` message showing the list of tracks in the queue
 * Added `mopidy/cmnd/chgtrk`  to change current playing track in tracklist
 
-**development**
+**1.0.6**
 * Fixed bug on `mopidy/cmnd/plrefresh`
 * Class name renaming
 
