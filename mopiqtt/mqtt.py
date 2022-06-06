@@ -16,8 +16,7 @@ class Comms:
             user=None, password=None, **kwargs):
         """
         Configure MQTT communication client.
-
-        frontend (MQTTFrontend): Instance of extension's frontend.
+        frontend (MopiqttFrontend): Instance of extension's frontend.
         """
         self.frontend = frontend
         self.host = host

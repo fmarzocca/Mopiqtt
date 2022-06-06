@@ -16,4 +16,4 @@ def test_extension():
 
 
 def test_smoke(config, core):
-    frontend.MQTTFrontend(config, core)
+    frontend.MopiqttFrontend(config, core)

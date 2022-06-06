@@ -16,13 +16,13 @@ VOLUME_MAX = 100
 VOLUME_MIN = 0
 
 
-class MQTTFrontend(pykka.ThreadingActor, CoreListener):
+class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
     def __init__(self, config, core):
         """
         config (dict): The entire Mopidy configuration.
         core (ActorProxy): Core actor for Mopidy Core API.
         """
-        super(MQTTFrontend, self).__init__()
+        super(MopiqttFrontend, self).__init__()
         self.core = core
         self.mqtt = Comms(frontend=self, **config['mopiqtt'])
         self.defaultImage = "https://fakeimg.pl/350x300/C0C0C0/?text=No%20Image%20Avail."
@@ -269,10 +269,11 @@ class MQTTFrontend(pykka.ThreadingActor, CoreListener):
     def on_action_plrefresh (self, value):
         # refresh a single playlist or all
         # value = uri_scheme, if value=None, all playlists are refreshed
-        self.core.playlists.refresh(uri_scheme=value)
         if value:
+            self.core.playlists.refresh(uri_scheme=value)
             log.debug ("Refreshed playlists with uri_scheme: %s",value)
         else:
+            self.core.playlists.refresh()
             log.debug("Refreshed all playlists")
 
     def on_action_chgtrk(self,value):
