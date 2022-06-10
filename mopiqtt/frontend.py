@@ -4,6 +4,7 @@ import logging
 import pykka
 from mopidy.core import CoreListener
 from mopidy.audio import PlaybackState
+from mopidy.models import SearchResult, Track, Artist, Album
 
 from .mqtt import Comms
 from .utils import describe_track, describe_stream, get_track_artwork
@@ -294,6 +295,18 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         log.debug("Uri_schemes handled by search: %s",schemes)
         self.mqtt.publish("uri_schemes",json.dumps(schemes))
 
+
+    def on_action_search(self,value):
+        if not value:
+            return log.info('search: Cannot search empty strings')
+        value = json.loads(value)
+        lookup_str = (value["search"])
+        lookup_uris = value["uri_schemes"]
+        query = {"any":lookup_str}
+        ret:SearchResult
+        ret = self.core.library.search(query=query,uris=lookup_uris).get()
+        log.debug("Search for %s in %s ended",lookup_str,lookup_uris)
+        self.mqtt.publish("search_results","%s"%ret)
 
 
 
