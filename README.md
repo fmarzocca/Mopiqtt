@@ -98,7 +98,7 @@ Information topic `mopidy/stat`.
 | Refresh one or all playlists(*)| `/plrefresh` | `<uri_scheme>` or `None`                        |
 | Change current playing track(**)| `/chgtrk` |    `<uri(str)>`                                    |
 | Query URI schemes Mopidy can handle in search | `/queryschemes` |  ` `                           |
-| Search for any string (artist, track, album) | `/search` | `JSON {"search": [list of strings], "uri_schemes": [list of schemes]}` | 
+| Search for any string (artist, track, album) | `/search` | `<JSON {"search": [list of strings], "uri_schemes": [list of schemes]}>` | 
 
 
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  
