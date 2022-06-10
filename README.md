@@ -51,6 +51,7 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
     - Request playlists list
     - Refresh playlists
     - Get tracklist
+    - Search for artist/album/track name
 
 
 # MQTT protocol
@@ -68,31 +69,36 @@ Information topic `mopidy/stat`.
 |               |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
 | Playback State|   `/plstate`  | `paused` / `stop` / `playing`         |
-| Volume        |   `/vol`  |               `<level:int>`               |
-| Current track |   `/trk`  | `<artist:str>;<title:str>;<album>` or ` ` |
+| Volume        |   `/vol`  |               `<level(int)>`               |
+| Current track |   `/trk`  | `<artist(str)> - <title(str)> - <album(str)>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
 | Playing track index (*)| `/trk-index` |  ` {current: x, last: y}`     |
 | Playlists have been refreshed | `/refreshed` | ` `                    |
 | List of tracks in the queue(**)   | `/trklist` | `<array of tracks name:uri>` |
+| List of URI schemes Mopidy can handle in search(***) | `/uri_schemes` | `<array of schemes (str)>` |
+| Search results | `/search_results` | `<array of objects {name: .. , uri:...}>` |
 
 `(*)`  Published after any track started playback  
-`(**)` Published after any tracklist change
+`(**)` Published after any tracklist change  
+`(***)`Published after a request `queryschemes`
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
 
-|                 | Subtopic |                               Parameters                              |
+|                 | Subtopic |                               Parameters                           |
 |:----------------:|:--------:|:-----------------------------------------------------------------:|
 | Playback control | `/plb`   | `play` / `stop` / `pause` / `resume` / `toggle` / `prev` / `next` |
 | Volume control   | `/vol`   | `=<int>` or `-<int>` or `+<int>`                                  |
 | Clear queue      | `/clr`   | ` `                                                               |
-| Add to queue     | `/add`   | `<uri:str>`                                                       |
-| Load and play playlist (straight)  | `/pload` | `<uri:str>`                                     |
-| Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri:str>`                               |   
+| Add to queue     | `/add`   | `<uri(str)>`                                                       |
+| Load and play playlist (straight)  | `/pload` | `<uri(str)>`                                     |
+| Load and play playlist (shuffle)   |   `/ploadshfl` | `<uri(str)>`                               |   
 | Request list of playlists| `/plist` | ` `                                                       |
-| Load and play a radio stream (or a single track) | `/pstream`| `<uri:str>`                      |
+| Load and play a radio stream (or a single track) | `/pstream`| `<uri(str)>`                      |
 | Refresh one or all playlists(*)| `/plrefresh` | `<uri_scheme>` or `None`                        |
-| Change current playing track(**)| `/chgtrk` |    `<uri:str>`                                    |
+| Change current playing track(**)| `/chgtrk` |    `<uri(str)>`                                    |
+| Query URI schemes Mopidy can handle in search | `/queryschemes` |  ` `                           |
+| Search for any string (artist, track, album) | `/search` | `<JSON {"search": [list of strings], "uri_schemes": [list of schemes]}>` | 
 
 
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  
