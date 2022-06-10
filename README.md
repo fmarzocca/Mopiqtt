@@ -78,7 +78,7 @@ Information topic `mopidy/stat`.
 | List of URI schemes Mopidy can handle in search(***) | `/uri_schemes` | `<array of schemes (str)>` |
 
 `(*)`  Published after any track started playback  
-`(**)` Published after any tracklist change
+`(**)` Published after any tracklist change  
 `(***)`Published after a request `queryschemes`
 
 ## Messages to publish to (mopidy/cmnd/`<msg>`)
