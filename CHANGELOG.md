@@ -2,7 +2,9 @@
 
 ## 1.0.7
 * Added `mopidy/cmnd/queryschemes` to request a list of uri-schemes Mopidy can handle in searches
-* Addes `mopidy/stat/uri_schemes` to get a list of uri-schemes Mopidy can handle in searches
+* Added `mopidy/stat/uri_schemes` to get a list of uri-schemes Mopidy can handle in searches
+* Added `mopidy/cmnd/search` to search libraries for any string (artist, album, track)
+* Added Added `mopidy/stat/search_results` to get results of search command
 
 ## 1.0.6
 * Fixed bug on `mopidy/cmnd/plrefresh`

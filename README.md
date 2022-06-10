@@ -51,6 +51,7 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
     - Request playlists list
     - Refresh playlists
     - Get tracklist
+    - Search for artist/album/track name
 
 
 # MQTT protocol
@@ -76,6 +77,7 @@ Information topic `mopidy/stat`.
 | Playlists have been refreshed | `/refreshed` | ` `                    |
 | List of tracks in the queue(**)   | `/trklist` | `<array of tracks name:uri>` |
 | List of URI schemes Mopidy can handle in search(***) | `/uri_schemes` | `<array of schemes (str)>` |
+| Search results | `/search_results` | `<array of objects {name: .. , uri:...}>` |
 
 `(*)`  Published after any track started playback  
 `(**)` Published after any tracklist change  
@@ -95,7 +97,8 @@ Information topic `mopidy/stat`.
 | Load and play a radio stream (or a single track) | `/pstream`| `<uri(str)>`                      |
 | Refresh one or all playlists(*)| `/plrefresh` | `<uri_scheme>` or `None`                        |
 | Change current playing track(**)| `/chgtrk` |    `<uri(str)>`                                    |
-| Query URI schemes Mopidy can handle in search | `/queryschemes` |  ` `                                    |
+| Query URI schemes Mopidy can handle in search | `/queryschemes` |  ` `                           |
+| Search for any string (artist, track, album) | `/search` | `JSON {"search": [list of strings], "uri_schemes": [list of schemes]}` | 
 
 
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  

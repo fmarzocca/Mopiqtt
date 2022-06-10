@@ -305,8 +305,15 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         query = {"any":lookup_str}
         ret:SearchResult
         ret = self.core.library.search(query=query,uris=lookup_uris).get()
-        log.debug("Search for %s in %s ended",lookup_str,lookup_uris)
-        self.mqtt.publish("search_results","%s"%ret)
+        found=(len(ret[0].tracks))
+        tracks = ret[0].tracks 
+        item ={}
+        final_list=[]
+        for k in tracks:
+            item = {"name":k.name,"uri":k.uri}
+            final_list.append(item)
+        log.debug("Search for %s in %s ended. Found %d tracks",lookup_str,lookup_uris, found)
+        self.mqtt.publish("search_results",json.dumps(final_list))
 
 
 
