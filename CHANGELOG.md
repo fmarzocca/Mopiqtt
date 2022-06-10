@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7
+* Added `mopidy/cmnd/queryschemes` to request a list of uri-schemes Mopidy can handle in searches
+* Addes `mopidy/stat/uri_schemes` to get a list of uri-schemes Mopidy can handle in searches
+
 ## 1.0.6
 * Fixed bug on `mopidy/cmnd/plrefresh`
 * Class name renaming

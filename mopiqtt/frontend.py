@@ -288,6 +288,11 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         self.core.playback.play(tlid=tlid)
         log.debug("Changed track to tlid: %s",tlid)
 
+    def on_action_queryschemes(self,value):
+        # request uri_schemes handled by search
+        schemes = self.core.get_uri_schemes().get()
+        log.debug("Uri_schemes handled by search: %s",schemes)
+        self.mqtt.publish("uri_schemes",json.dumps(schemes))
 
 
 
