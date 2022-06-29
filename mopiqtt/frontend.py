@@ -26,7 +26,7 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         super(MopiqttFrontend, self).__init__()
         self.core = core
         self.mqtt = Comms(frontend=self, **config['mopiqtt'])
-        self.defaultImage = "https://fakeimg.pl/350x300/C0C0C0/?text=No%20Image%20Avail."
+        self.defaultImage = "https://fakeimg.pl/350x300/eeeeee/?text=No%20Image%20Avail.&font=Roboto"
 
     def on_start(self):
         """

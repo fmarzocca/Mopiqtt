@@ -79,7 +79,7 @@ Information topic `mopidy/stat`.
 | List of URI schemes Mopidy can handle in search(***) | `/uri_schemes` | `<array of schemes (str)>` |
 | Search results | `/search_results` | `<array of objects {name: .. , uri:...}>` |
 
-`(*)`  Published after any track started playback  
+`(*)`  Published after any track started playback. Local artwork is NOT supported  
 `(**)` Published after any tracklist change  
 `(***)`Published after a request `queryschemes`
 

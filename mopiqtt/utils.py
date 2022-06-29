@@ -47,7 +47,12 @@ def describe_stream(raw_title):
 def get_track_artwork(self, track):
     imageUri=self.core.library.get_images([track.uri]).get()[track.uri]
     if (imageUri):
-        return imageUri[0].uri
+        if imageUri[0].uri.startswith("/local"):
+            return self.defaultImage
+        else:
+            return imageUri[0].uri
+
+        return image
     else:
         return self.defaultImage
         
