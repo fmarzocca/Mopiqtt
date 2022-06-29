@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.8
+* Local artwork is not supported
+
 ## 1.0.7
 * Added `mopidy/cmnd/queryschemes` to request a list of uri-schemes Mopidy can handle in searches
 * Added `mopidy/stat/uri_schemes` to get a list of uri-schemes Mopidy can handle in searches
