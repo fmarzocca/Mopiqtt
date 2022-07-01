@@ -13,7 +13,7 @@ HANDLER_PREFIX = 'on_action_'
 class Comms:
     def __init__(
             self, frontend, host='localhost', port=1883, topic='mopidy',
-            user=None, password=None, **kwargs):
+            username=None, password=None, **kwargs):
         """
         Configure MQTT communication client.
         frontend (MopiqttFrontend): Instance of extension's frontend.
@@ -22,7 +22,7 @@ class Comms:
         self.host = host
         self.port = port
         self.topic = topic
-        self.user = user
+        self.user = username
         self.password = password
 
         self.client = mqtt.Client(
