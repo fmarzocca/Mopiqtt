@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.9
+* Bugfix on mqtt username (Credit: @hirschharald) Closes [#2](https://github.com/fmarzocca/Mopiqtt/issues/2) 
+
 ## 1.0.8
 * Local artwork is not supported
 
