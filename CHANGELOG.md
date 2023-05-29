@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.10
+* Fixed default artwork image
+
 ## 1.0.9
 * Bugfix on mqtt username (Credit: @hirschharald) Closes [#2](https://github.com/fmarzocca/Mopiqtt/issues/2) 
 
