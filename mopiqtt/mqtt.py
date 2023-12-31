@@ -1,5 +1,5 @@
 import logging
-from os import getpid
+import random
 
 from paho.mqtt import client as mqtt
 
@@ -26,7 +26,7 @@ class Comms:
         self.password = password
 
         self.client = mqtt.Client(
-            client_id='mopidy-{}'.format(getpid()), clean_session=True)
+            client_id='mopidy-{}'.format(random.randint(1000,9999)), clean_session=True)
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
 
