@@ -1,4 +1,6 @@
 # Changelog
+## 1.0.11
+* Fixes [#4](https://github.com/fmarzocca/Mopiqtt/issues/4)
 
 ## 1.0.10
 * Fixed default artwork image
