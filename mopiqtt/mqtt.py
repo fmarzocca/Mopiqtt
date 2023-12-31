@@ -1,5 +1,5 @@
 import logging
-from os import getpid
+import random
 
 from paho.mqtt import client as mqtt
 
@@ -26,7 +26,7 @@ class Comms:
         self.password = password
 
         self.client = mqtt.Client(
-            client_id='mopidy-{}'.format(getpid()), clean_session=True)
+            client_id='mopidy-{}'.format(random.randint(1000,9999)), clean_session=True)
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
 
@@ -78,7 +78,7 @@ class Comms:
         log.debug('Passing payload: %s to MQTT handler: %s',
                   message.payload, handler.__name__)
         handler(value=message.payload.decode('utf8'))
-
+format
     def publish(self, subtopic, value):
         full_topic = '{}/stat/{}'.format(self.topic, subtopic)
 
