@@ -78,7 +78,7 @@ class Comms:
         log.debug('Passing payload: %s to MQTT handler: %s',
                   message.payload, handler.__name__)
         handler(value=message.payload.decode('utf8'))
-format
+
     def publish(self, subtopic, value):
         full_topic = '{}/stat/{}'.format(self.topic, subtopic)
 
