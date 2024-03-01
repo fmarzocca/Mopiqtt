@@ -1,4 +1,7 @@
 # Changelog
+## 1.1.0
+* New paho-mqqt requirement (v.>=2.0)
+
 ## 1.0.11
 * Fixes [#4](https://github.com/fmarzocca/Mopiqtt/issues/4)
 
