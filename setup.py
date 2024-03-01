@@ -26,7 +26,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'Mopidy >= 3.0',
-        'paho-mqtt',
+        'paho-mqtt >= 2.0',
         'Pykka >= 2.0',
         'setuptools',
     ],

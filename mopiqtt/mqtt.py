@@ -26,7 +26,7 @@ class Comms:
         self.password = password
 
         self.client = mqtt.Client(
-            client_id='mopidy-{}'.format(random.randint(1000,9999)), clean_session=True)
+            mqtt.CallbackAPIVersion.VERSION2,client_id='mopidy-{}'.format(random.randint(1000,9999)))
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
 
@@ -50,7 +50,7 @@ class Comms:
         self.client.disconnect()
         log.debug('Disconnected from MQTT broker')
 
-    def _on_connect(self, client, userdata, flags, rc):
+    def _on_connect(self, client, userdata, flags, rc, properties):
         log.info('Successfully connected to MQTT broker, result :%s', rc)
 
         for name in dir(self.frontend):
