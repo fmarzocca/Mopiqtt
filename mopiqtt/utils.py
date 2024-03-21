@@ -1,4 +1,4 @@
-UNKNOWN = u''
+UNKNOWN = ""
 
 
 def describe_track(track):
@@ -22,7 +22,7 @@ def describe_track(track):
     else:
         album = UNKNOWN
 
-    return u';'.join([title, artist, album])
+    return ";".join([title, artist, album])
 
 
 def describe_stream(raw_title):
@@ -34,19 +34,20 @@ def describe_stream(raw_title):
     album = UNKNOWN
 
     # Very common separator.
-    if '-' in raw_title:
-        parts = raw_title.split('-')
+    if "-" in raw_title:
+        parts = raw_title.split("-")
         artist = parts[0].strip()
         title = parts[1].strip()
     else:
         # Just assume we only have track title.
         title = raw_title
 
-    return u';'.join([title, artist, album])
+    return ";".join([title, artist, album])
+
 
 def get_track_artwork(self, track):
-    imageUri=self.core.library.get_images([track.uri]).get()[track.uri]
-    if (imageUri):
+    imageUri = self.core.library.get_images([track.uri]).get()[track.uri]
+    if imageUri:
         if imageUri[0].uri.startswith("/local"):
             return self.defaultImage
         else:
@@ -55,4 +56,3 @@ def get_track_artwork(self, track):
         return image
     else:
         return self.defaultImage
-        

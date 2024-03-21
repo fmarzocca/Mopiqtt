@@ -1,4 +1,7 @@
 # Changelog
+## 1.2.0
+* Added track uri message
+
 ## 1.1.0
 * New paho-mqqt requirement (v.>=2.0)
 
