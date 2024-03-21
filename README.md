@@ -73,6 +73,7 @@ Information topic `mopidy/stat`.
 | Current track |   `/trk`  | `<artist(str)> - <title(str)> - <album(str)>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
+| Track uri (*)| `/trk_uri`   |   `<track uri (string)>`         | 
 | Playing track index (*)| `/trk-index` |  ` {current: x, last: y}`     |
 | Playlists have been refreshed | `/refreshed` | ` `                    |
 | List of tracks in the queue(**)   | `/trklist` | `<array of tracks name:uri>` |
