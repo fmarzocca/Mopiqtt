@@ -1,4 +1,7 @@
 # Changelog
+## 1.2.1
+* Fixes failing tests [#6](https://github.com/fmarzocca/Mopiqtt/issues/6)
+
 ## 1.2.0
 * Added track uri message
 

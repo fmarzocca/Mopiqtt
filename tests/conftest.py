@@ -7,7 +7,7 @@ from mopidy.core import Core
 def config():
     return {
         'core': {},
-        'mqtt': {
+        'mopiqtt': {
             'host': 'localhost',
             'port': 1883,
             'topic': 'mopidy',
