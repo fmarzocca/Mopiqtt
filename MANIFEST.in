@@ -4,4 +4,5 @@ include LICENSE
 include MANIFEST.in
 include mopiqtt/ext.conf
 include tox.ini
+exclude mynotes.txt
 recursive-include tests *.py
