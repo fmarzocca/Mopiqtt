@@ -314,3 +314,315 @@ Ordine suggerito:
 10. Pulire codice morto, import inutilizzati e API deprecate.
 
 Nel complesso, la base è valida per un progetto personale o domestico controllato. Per un uso realmente “Production/Stable”, servono soprattutto isolamento degli errori, test comportamentali, sicurezza MQTT e maggiore disciplina nel packaging.
+
+
+
+
+
+## AMBIENTE DI TEST
+
+Sì: per una prova reale ti servono:
+
+- un ambiente virtuale Python;
+- Mopidy;
+- un broker MQTT, ad esempio Mosquitto;
+- questo progetto installato in modalità editable.
+
+Il `venv` è consigliato. Nel tuo caso lo creerei fuori dal repository, perché `.venv` non è incluso nel `.gitignore` e il progetto è dentro Google Drive.
+
+## 1. Crea il virtualenv
+
+Dal terminale:
+
+```bash
+python3 -m venv "$HOME/.venvs/mopiqtt"
+source "$HOME/.venvs/mopiqtt/bin/activate"
+python -m pip install --upgrade pip
+```
+
+Ogni volta che vuoi lavorare sul progetto:
+
+```bash
+source "$HOME/.venvs/mopiqtt/bin/activate"
+```
+
+## 2. Installa le dipendenze audio di Mopidy
+
+Su macOS, Mopidy necessita anche di componenti non Python, in particolare GStreamer. La documentazione ufficiale suggerisce:
+
+```bash
+brew install \
+  cairo \
+  gobject-introspection \
+  gst-python \
+  gst-plugins-base \
+  gst-plugins-good \
+  gst-plugins-ugly
+```
+
+Questo è necessario soprattutto per riprodurre davvero audio. [Documentazione ufficiale Mopidy](https://docs.mopidy.com/stable/installation/manual/)
+
+## 3. Installa il progetto
+
+Dalla directory del repository, con il venv attivo:
+
+```bash
+python -m pip install -e .
+```
+
+Non devi installare Mopidy separatamente con pip: è già dichiarato come dipendenza in `setup.py`, quindi questo comando installerà:
+
+- Mopidy;
+- Paho MQTT;
+- Pykka;
+- Mopiqtt in modalità editable.
+
+Controlla:
+
+```bash
+python -m pip show Mopidy
+python -m pip show Mopiqtt
+which mopidy
+```
+
+L’eseguibile `mopidy` dovrebbe trovarsi dentro `$HOME/.venvs/mopiqtt/bin`.
+
+## 4. Installa e avvia Mosquitto
+
+Su macOS:
+
+```bash
+brew install mosquitto
+mosquitto -v
+```
+
+Lascia questo terminale aperto. Il broker dovrebbe ascoltare su `127.0.0.1:1883`.
+
+In altri due terminali, sempre con Homebrew disponibile, potrai usare:
+
+```bash
+mosquitto_sub
+mosquitto_pub
+```
+
+## 5. Prepara una configurazione di prova
+
+Per evitare di toccare il repository:
+
+```bash
+mkdir -p /tmp/mopiqtt-test
+nano /tmp/mopiqtt-test/mopidy.conf
+```
+
+Inserisci:
+
+```ini
+[mopiqtt]
+enabled = true
+host = 127.0.0.1
+port = 1883
+topic = mopidy
+username =
+password =
+```
+
+Mopidy integra automaticamente la configurazione dell’estensione installata. Puoi vedere la configurazione effettiva con il comando `mopidy config`. [Documentazione configurazione Mopidy](https://docs.mopidy.com/stable/usage/config/)
+
+## 6. Avvia un subscriber MQTT
+
+In un secondo terminale:
+
+```bash
+mosquitto_sub -h 127.0.0.1 -t 'mopidy/#' -v
+```
+
+Questo mostra tutti i messaggi pubblicati sotto il topic `mopidy`.
+
+## 7. Avvia Mopidy con Mopiqtt
+
+In un terzo terminale:
+
+```bash
+source "$HOME/.venvs/mopiqtt/bin/activate"
+mopidy --config /tmp/mopiqtt-test/mopidy.conf -v
+```
+
+Nel log dovresti trovare riferimenti a:
+
+```text
+Starting MQTT frontend
+Connecting to MQTT broker
+Successfully connected
+```
+
+Se Mopidy dichiara che la sezione `[mopiqtt]` è sconosciuta, controlla che `mopidy` e `Mopiqtt` appartengano allo stesso virtualenv:
+
+```bash
+which python
+which mopidy
+python -m pip show Mopiqtt
+```
+
+## 8. Invia alcuni comandi
+
+### Volume
+
+```bash
+mosquitto_pub \
+  -h 127.0.0.1 \
+  -t mopidy/cmnd/vol \
+  -m '=30'
+```
+
+Nel subscriber dovresti ricevere qualcosa come:
+
+```text
+mopidy/stat/vol 30
+```
+
+Puoi anche provare:
+
+```bash
+mosquitto_pub -h 127.0.0.1 -t mopidy/cmnd/vol -m '+5'
+mosquitto_pub -h 127.0.0.1 -t mopidy/cmnd/vol -m '-5'
+```
+
+### Stato playback
+
+```bash
+mosquitto_pub -h 127.0.0.1 -t mopidy/cmnd/plb -m 'play'
+mosquitto_pub -h 127.0.0.1 -t mopidy/cmnd/plb -m 'pause'
+mosquitto_pub -h 127.0.0.1 -t mopidy/cmnd/plb -m 'stop'
+```
+
+Senza una traccia in coda, `play` potrebbe non produrre un risultato visibile; `stop` e i log permettono comunque di verificare il routing.
+
+### Elenco degli schemi URI
+
+```bash
+mosquitto_pub -h 127.0.0.1 -t mopidy/cmnd/queryschemes -n
+```
+
+Dovresti ricevere:
+
+```text
+mopidy/stat/uri_schemes [...]
+```
+
+### Elenco playlist
+
+```bash
+mosquitto_pub -h 127.0.0.1 -t mopidy/cmnd/plist -n
+```
+
+## 9. Esegui i test automatici
+
+Il progetto non include pytest tra le dipendenze normali:
+
+```bash
+python -m pip install pytest flake8
+PYTHONDONTWRITEBYTECODE=1 pytest -p no:cacheprovider -q
+flake8 mopiqtt setup.py tests
+```
+
+Mi aspetto due test, entrambi molto basilari. Non userei subito `tox`, perché la sua configurazione corrente richiede Python 3.7 e scarica Mopidy dal branch remoto `develop`, quindi non è un ambiente riproducibile.
+
+## Sequenza minima consigliata
+
+In pratica:
+
+```text
+Terminale 1: mosquitto -v
+Terminale 2: mosquitto_sub -h 127.0.0.1 -t 'mopidy/#' -v
+Terminale 3: mopidy --config /tmp/mopiqtt-test/mopidy.conf -v
+Terminale 4: mosquitto_pub ... 
+```
+
+Per verificare soltanto il collegamento MQTT non ti serve ancora una libreria musicale. Per provare riproduzione, ricerca, artwork e playlist dovrai poi configurare almeno un backend Mopidy con tracce reali.
+
+Perfetto: non devi installare Mosquitto localmente. Devi comunque installare Mopidy, perché Mopiqtt è un’estensione di Mopidy.
+
+Ti consiglio di usare un topic di prova distinto, ad esempio `mopidy-test`, per evitare di interferire con eventuali flow Node-RED già attivi.
+
+Configurazione:
+
+```ini
+[mopiqtt]
+enabled = true
+host = 192.168.1.50
+port = 1883
+topic = mopidy-test
+username = tuo_username
+password = tua_password
+```
+
+Sostituisci `192.168.1.50` con l’IP del broker. Se non usa autenticazione:
+
+```ini
+username =
+password =
+```
+
+Attenzione: questa versione di Mopiqtt non supporta TLS. Se il broker accetta solamente connessioni TLS sulla porta `8883`, il programma non potrà collegarsi senza modifiche al codice.
+
+La sequenza diventa:
+
+```bash
+python3 -m venv "$HOME/.venvs/mopiqtt"
+source "$HOME/.venvs/mopiqtt/bin/activate"
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+
+Poi avvii Mopidy:
+
+```bash
+mopidy --config /tmp/mopiqtt-test/mopidy.conf -v
+```
+
+Nel log cerca:
+
+```text
+Connecting to MQTT broker at 192.168.1.50:1883
+Successfully connected to MQTT broker
+Subscribed to MQTT topic: mopidy-test/cmnd/...
+```
+
+Nota: attualmente il programma scrive “Successfully connected” anche se il broker restituisce un errore. La prova più affidabile è quindi verificare dal broker o da Node-RED che il client sia effettivamente connesso.
+
+In Node-RED puoi aggiungere temporaneamente:
+
+- un nodo `mqtt in`;
+- topic: `mopidy-test/#`;
+- output collegato a un nodo `debug`.
+
+Per inviare un comando usa un nodo `mqtt out`:
+
+```text
+Topic: mopidy-test/cmnd/vol
+Payload: =30
+```
+
+Nel debug dovresti ricevere:
+
+```text
+Topic: mopidy-test/stat/vol
+Payload: 30
+```
+
+Altri test semplici:
+
+```text
+mopidy-test/cmnd/plb        payload: stop
+mopidy-test/cmnd/plb        payload: play
+mopidy-test/cmnd/plist      payload vuoto
+mopidy-test/cmnd/queryschemes payload vuoto
+```
+
+Quindi, in sintesi:
+
+- broker MQTT: lo hai già;
+- Node-RED: puoi usarlo come client di test;
+- Mopidy: sì, va installato;
+- virtualenv: sì, raccomandato;
+- backend musicale: non serve per verificare connessione e volume, ma serve per provare realmente tracce, playlist, ricerca e artwork.
