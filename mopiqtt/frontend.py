@@ -1,18 +1,28 @@
 from builtins import str
+from importlib import import_module
+import json
 import logging
 
 import pykka
 from mopidy.core import CoreListener
-try:
-    from mopidy.types import PlaybackState
-except ImportError:  # Mopidy < 4
-    from mopidy.audio import PlaybackState
-from mopidy.models import SearchResult, Track, Artist, Album
+from mopidy.models import SearchResult
 
 from .mqtt import Comms
 from .utils import describe_track, describe_stream, get_track_artwork
 
-import json
+
+def _load_playback_state():
+    for module_name in ("mopidy.types", "mopidy.audio"):
+        try:
+            module = import_module(module_name)
+            return getattr(module, "PlaybackState")
+        except (AttributeError, ImportError):
+            continue
+
+    raise ImportError("Cannot import PlaybackState from Mopidy")
+
+
+PlaybackState = _load_playback_state()
 
 log = logging.getLogger(__name__)
 
@@ -310,10 +320,14 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         lookup_str = value["search"]
         lookup_uris = value["uri_schemes"]
         query = {"any": lookup_str}
-        ret: SearchResult
-        ret = self.core.library.search(query=query, uris=lookup_uris).get()
-        found = len(ret[0].tracks)
-        tracks = ret[0].tracks
+        results = self.core.library.search(query=query, uris=lookup_uris).get()
+        if isinstance(results, SearchResult):
+            search_result = results
+        else:
+            search_result = next(iter(results or ()), None)
+
+        tracks = getattr(search_result, "tracks", ()) or ()
+        found = len(tracks)
         item = {}
         final_list = []
         for k in tracks:
