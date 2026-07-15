@@ -1,6 +1,8 @@
 Based on [mopidy-mqtt](https://github.com/odiroot/mopidy-mqtt)
 
 # Mopiqtt
+[![CI](https://github.com/fmarzocca/Mopiqtt/actions/workflows/ci.yml/badge.svg?branch=Development)](https://github.com/fmarzocca/Mopiqtt/actions/workflows/ci.yml)
+
  MQTT interface for Mopidy music server. Allows easy integration with Node Red or any MQTT client.
  This package is mainly useful to Node Red users, who can embed in their flows a full control over Mopidy by simple mqtt-in or mqtt-out nodes. See [Node Red examples](https://github.com/fmarzocca/Mopiqtt/tree/Development/NodeRed%20examples). Of course, it can be used by any other MQTT client too.
 
@@ -39,6 +41,9 @@ To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
 Mopidy 3 imports `pkg_resources` at runtime. If you use Mopidy 3, keep
 `setuptools` below version 82, since version 82 removed `pkg_resources`.
 Mopidy 4 does not require this constraint.
+
+Mopidy 3 compatibility is maintained in the 2.x series and may be removed in a
+future major release. New installations should use Mopidy 4.
 
 # Features
 

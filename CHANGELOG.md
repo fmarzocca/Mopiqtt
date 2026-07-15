@@ -8,6 +8,7 @@
 * Preserved queues during playlist/stream validation and restored them after loading errors when Mopidy rollback operations succeed
 * Reported rejected MQTT connections and Mopidy command failures instead of silently discarding asynchronous errors
 * Prevented incomplete track metadata or a missing track index from breaking MQTT status updates
+* Added automated CI coverage for Mopidy 3 and 4 on supported Python versions
 
 ## 1.2.1
 * Fixes failing tests [#6](https://github.com/fmarzocca/Mopiqtt/issues/6)
