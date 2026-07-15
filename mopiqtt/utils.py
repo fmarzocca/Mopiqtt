@@ -1,3 +1,9 @@
+import logging
+
+
+log = logging.getLogger(__name__)
+
+
 UNKNOWN = ""
 
 
@@ -46,13 +52,23 @@ def describe_stream(raw_title):
 
 
 def get_track_artwork(self, track):
-    imageUri = self.core.library.get_images([track.uri]).get()[track.uri]
-    if imageUri:
-        if imageUri[0].uri.startswith("/local"):
-            return self.defaultImage
-        else:
-            return imageUri[0].uri
+    track_uri = getattr(track, "uri", None)
+    if not track_uri:
+        return self.defaultImage
 
-        return image
-    else:
+    try:
+        artwork = self.core.library.get_images([track_uri]).get()
+        images = (artwork or {}).get(track_uri, ())
+        if not images:
+            return self.defaultImage
+
+        image_uri = getattr(images[0], "uri", None)
+        if not image_uri:
+            return self.defaultImage
+        if image_uri == "/local" or image_uri.startswith("/local/"):
+            return self.defaultImage
+
+        return image_uri
+    except Exception:
+        log.exception("Failed to get artwork for track URI: %s", track_uri)
         return self.defaultImage

@@ -11,6 +11,8 @@ def config():
             'host': 'localhost',
             'port': 1883,
             'topic': 'mopidy',
+            'username': '',
+            'password': '',
         },
     }
 

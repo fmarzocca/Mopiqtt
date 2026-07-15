@@ -1,4 +1,27 @@
 # Changelog
+## Unreleased
+
+## 2.0.0 - 2026-07-15
+
+### Compatibility
+* Added compatibility with Mopidy 4 while retaining Mopidy 3.4 support
+* Added official support for Python 3.13 and later
+
+### Changed
+* Preserved queues during playlist and stream validation, and restored them after loading errors when Mopidy rollback operations succeed
+
+### Fixed
+* Prevented invalid MQTT payloads and handler errors from stopping subsequent messages
+* Fixed search result handling for Mopidy 4 and empty results while retaining Mopidy 3 compatibility
+* Fixed artwork fallback handling for missing, local, or unavailable images
+* Reported rejected MQTT connections
+* Awaited Mopidy command futures and reported failures instead of silently discarding asynchronous errors
+* Prevented incomplete track metadata or a missing track index from breaking MQTT status updates
+
+### Internal
+* Added automated CI coverage for Mopidy 3 and 4 on Python 3.13 and 3.14
+* Added PEP 517 build metadata in `pyproject.toml`
+
 ## 1.2.1
 * Fixes failing tests [#6](https://github.com/fmarzocca/Mopiqtt/issues/6)
 
@@ -50,15 +73,3 @@
 
 ## 1.0.1
 * First release
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,18 +1,28 @@
 from builtins import str
+from importlib import import_module
+import json
 import logging
 
 import pykka
 from mopidy.core import CoreListener
-try:
-    from mopidy.types import PlaybackState
-except ImportError:  # Mopidy < 4
-    from mopidy.audio import PlaybackState
-from mopidy.models import SearchResult, Track, Artist, Album
+from mopidy.models import SearchResult
 
 from .mqtt import Comms
 from .utils import describe_track, describe_stream, get_track_artwork
 
-import json
+
+def _load_playback_state():
+    for module_name in ("mopidy.types", "mopidy.audio"):
+        try:
+            module = import_module(module_name)
+            return getattr(module, "PlaybackState")
+        except (AttributeError, ImportError):
+            continue
+
+    raise ImportError("Cannot import PlaybackState from Mopidy")
+
+
+PlaybackState = _load_playback_state()
 
 log = logging.getLogger(__name__)
 
@@ -66,7 +76,7 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         # Normalize.
         value = min(value, VOLUME_MAX)
         value = max(value, VOLUME_MIN)
-        self.core.mixer.set_volume(value)
+        self.core.mixer.set_volume(value).get()
 
     @property
     def current_state(self):
@@ -83,11 +93,13 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         tracks = []
         item = {}
         for a in tk_list:
+            name = a.name or ""
             if a.artists:
-                artist = next(iter(a.artists)).name
-                item = {"name": artist + " - " + a.name, "uri": a.uri}
+                artist = next(iter(a.artists)).name or ""
+                item_name = "{} - {}".format(artist, name) if artist else name
             else:
-                item = {"name": a.name, "uri": a.uri}
+                item_name = name
+            item = {"name": item_name, "uri": a.uri}
             tracks.append(item)
         self.mqtt.publish("trklist", json.dumps(tracks))
         log.debug("Generated tracklist list")
@@ -117,7 +129,7 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         curr = self.core.tracklist.index().get()
         last = self.core.tracklist.get_length().get()
         pl_index = {}
-        pl_index["current"] = curr + 1
+        pl_index["current"] = curr + 1 if curr is not None else None
         pl_index["last"] = last
         pl_index = json.dumps(pl_index)
         self.mqtt.publish("trk-index", pl_index)
@@ -152,39 +164,39 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
     def on_action_plb(self, value):
         """Playback control."""
         if value == "play":
-            return self.core.playback.play()
+            return self.core.playback.play().get()
         if value == "stop":
-            return self.core.playback.stop()
+            return self.core.playback.stop().get()
         if value == "pause":
-            return self.core.playback.pause()
+            return self.core.playback.pause().get()
         if value == "resume":
-            return self.core.playback.resume()
+            return self.core.playback.resume().get()
 
         if value == "toggle":
             if self.current_state == PlaybackState.PLAYING:
-                return self.core.playback.pause()
+                return self.core.playback.pause().get()
             if self.current_state == PlaybackState.PAUSED:
-                return self.core.playback.resume()
+                return self.core.playback.resume().get()
             if self.current_state == PlaybackState.STOPPED:
-                return self.core.playback.play()
+                return self.core.playback.play().get()
 
         if value == "prev":
-            return self.core.playback.previous()
+            return self.core.playback.previous().get()
         if value == "next":
-            return self.core.playback.next()
+            return self.core.playback.next().get()
 
-        log.warn("Unknown playback control action: %s", value)
+        log.warning("Unknown playback control action: %s", value)
 
     def on_action_vol(self, value):
         """Volume control."""
         if not value or len(value) < 2:
-            return log.warn("Invalid volume control parameter: %s", value)
+            return log.warning("Invalid volume control parameter: %s", value)
 
         operator = value[0]
         try:
             amount = int(value[1:])
         except ValueError:
-            return log.warn("Invalid volume setting value: %s", value[1:])
+            return log.warning("Invalid volume setting value: %s", value[1:])
 
         # Exact volume.
         if operator == "=":
@@ -199,70 +211,144 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
             self.volume += amount
             return
 
-        log.warn("Unknown volume control operator: %s", operator)
+        log.warning("Unknown volume control operator: %s", operator)
 
     def on_action_add(self, value):
         """Append URI to queue (tracklist)."""
         if not value:
-            return log.warn("Cannot add empty track to queue")
+            return log.warning("Cannot add empty track to queue")
 
         track = []
         track.append(value)
-        self.core.tracklist.add(uris=track)
+        self.core.tracklist.add(uris=track).get()
         log.debug("Added track: %s", value)
+
+    def _resolve_tracks(self, uris):
+        if not uris:
+            return None
+
+        # Mopidy 3 and 4 implement tracklist.add(uris=...) using this same
+        # lookup and flattening each URI in order. Iterating the original URI
+        # list here also preserves duplicate playlist entries.
+        lookup = self.core.library.lookup(uris=uris).get()
+        if not lookup:
+            return None
+
+        tracks = []
+        for uri in uris:
+            uri_tracks = lookup.get(uri)
+            if not uri_tracks:
+                return None
+            tracks.extend(uri_tracks)
+
+        return tracks
+
+    def _restore_tracklist(self, tracks):
+        try:
+            self.core.tracklist.clear().get()
+            if tracks:
+                self.core.tracklist.add(tracks=tracks).get()
+        except Exception:
+            log.exception("Failed to restore previous tracklist")
+            return False
+
+        return True
+
+    def _replace_tracklist(self, tracks, shuffle=False):
+        try:
+            previous_version = self.core.tracklist.get_version().get()
+            previous_tracks = self.core.tracklist.get_tracks().get()
+            if self.core.tracklist.get_version().get() != previous_version:
+                log.warning("Tracklist changed while preparing replacement")
+                return False
+        except Exception:
+            log.exception("Cannot snapshot the current tracklist")
+            return False
+
+        try:
+            self.core.tracklist.clear().get()
+            self.core.tracklist.add(tracks=tracks).get()
+            if shuffle:
+                self.core.tracklist.shuffle().get()
+            self.core.playback.play().get()
+        except Exception:
+            log.exception("Failed to replace tracklist; restoring previous queue")
+            self._restore_tracklist(previous_tracks)
+            return False
+
+        return True
 
     def on_action_pstream(self, value):
         """Load and start a radio stream or a single track (tracklist)."""
         if not value:
-            return log.warn("Cannot load empty track to queue")
+            return log.warning("Cannot load empty track to queue")
 
-        track = []
-        track.append(value)
-        self.core.tracklist.clear()
-        self.core.tracklist.add(uris=track)
-        self.core.playback.play()
-        log.debug("Started track: %s", value)
+        try:
+            tracks = self._resolve_tracks([value])
+        except Exception:
+            log.exception("Failed to validate stream: %s", value)
+            return
+
+        if not tracks:
+            log.info("Invalid stream: %s", value)
+            return
+
+        if self._replace_tracklist(tracks):
+            log.debug("Started track: %s", value)
+
+    def _get_playlist_tracks(self, uri):
+        items = self.core.playlists.get_items(uri).get()
+        if not items:
+            return None
+
+        uris = []
+        for item in items:
+            item_uri = getattr(item, "uri", None)
+            if not item_uri:
+                return None
+            uris.append(item_uri)
+
+        return self._resolve_tracks(uris)
 
     def on_action_pload(self, value):
         """Replace current queue with playlist from URI."""
         if not value:
-            return log.warn("Cannot load unnamed playlist")
+            return log.warning("Cannot load unnamed playlist")
 
-        self.core.tracklist.clear()
-        # Read playlist (e.g. Spotify, Tidal, streams)
-        items = self.core.playlists.get_items(value)
-        tracks = []
         try:
-            for a in items.get():
-                tracks.append(a.uri)
-        except ValueError:
-            return log.info("Invalid playlist: %s", value)
-        self.core.tracklist.add(uris=tracks)
-        self.core.playback.play()
-        log.debug("Started Playlist: %s", value)
+            tracks = self._get_playlist_tracks(value)
+        except Exception:
+            log.exception("Failed to validate playlist: %s", value)
+            return
+
+        if not tracks:
+            log.info("Invalid playlist: %s", value)
+            return
+
+        if self._replace_tracklist(tracks):
+            log.debug("Started Playlist: %s", value)
 
     def on_action_ploadshfl(self, value):
         # Replace current queue with shuffled playlist from URI.
         if not value:
-            return log.warn("Cannot load unnamed playlist")
+            return log.warning("Cannot load unnamed playlist")
 
-        self.core.tracklist.clear()
-        # Read playlist (e.g. Spotify, Tidal, streams)
-        items = self.core.playlists.get_items(value)
-        tracks = []
         try:
-            for a in items.get():
-                tracks.append(a.uri)
-        except ValueError:
-            return log.info("Invalid playlist: %s", value)
-        self.core.tracklist.add(uris=tracks)
-        self.core.tracklist.shuffle()
-        self.core.playback.play()
-        log.debug("Started shuffled Playlist: %s", value)
+            tracks = self._get_playlist_tracks(value)
+        except Exception:
+            log.exception("Failed to validate playlist: %s", value)
+            return
+
+        if not tracks:
+            log.info("Invalid playlist: %s", value)
+            return
+
+        if self._replace_tracklist(tracks, shuffle=True):
+            log.debug("Started shuffled Playlist: %s", value)
 
     def on_action_clr(self, value):
         """Clear the queue (tracklist)."""
-        return self.core.tracklist.clear()
+        return self.core.tracklist.clear().get()
 
     def on_action_plist(self, value):
         # Request a list of all playlist
@@ -279,10 +365,10 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         # refresh a single playlist or all
         # value = uri_scheme, if value=None, all playlists are refreshed
         if value:
-            self.core.playlists.refresh(uri_scheme=value)
+            self.core.playlists.refresh(uri_scheme=value).get()
             log.debug("Refreshed playlists with uri_scheme: %s", value)
         else:
-            self.core.playlists.refresh()
+            self.core.playlists.refresh().get()
             log.debug("Refreshed all playlists")
 
     def on_action_chgtrk(self, value):
@@ -293,9 +379,9 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         flt = self.core.tracklist.filter(criteria={"uri": [value]}).get()
         if not flt:
             return log.info("chgtrk: Invalid track")
-        (tlid, trk) = flt[0]
-        self.core.playback.play(tlid=tlid)
-        log.debug("Changed track to tlid: %s", tlid)
+        tl_track = flt[0]
+        self.core.playback.play(tlid=tl_track.tlid).get()
+        log.debug("Changed track to tlid: %s", tl_track.tlid)
 
     def on_action_queryschemes(self, value):
         # request uri_schemes handled by search
@@ -310,10 +396,14 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         lookup_str = value["search"]
         lookup_uris = value["uri_schemes"]
         query = {"any": lookup_str}
-        ret: SearchResult
-        ret = self.core.library.search(query=query, uris=lookup_uris).get()
-        found = len(ret[0].tracks)
-        tracks = ret[0].tracks
+        results = self.core.library.search(query=query, uris=lookup_uris).get()
+        if isinstance(results, SearchResult):
+            search_result = results
+        else:
+            search_result = next(iter(results or ()), None)
+
+        tracks = getattr(search_result, "tracks", ()) or ()
+        found = len(tracks)
         item = {}
         final_list = []
         for k in tracks:

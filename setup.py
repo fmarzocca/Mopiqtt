@@ -3,12 +3,11 @@ from __future__ import unicode_literals
 import re
 from setuptools import find_packages
 from setuptools import setup
-import pkg_resources
 
 
 def get_version(filename):
     content = open(filename).read()
-    metadata = dict(re.findall("__([a-z]+)__ = \"([\d.]+)\"", content))
+    metadata = dict(re.findall(r'__([a-z]+)__ = "([\d.]+)"', content))
     return metadata["version"]
 
 
@@ -16,6 +15,7 @@ setup(
     name="Mopiqtt",
     version=get_version("mopiqtt/__init__.py"),
     license="Apache License, Version 2.0",
+    python_requires=">=3.13",
     description="Control mopidy music server through MQTT broker",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -26,10 +26,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "Mopidy >= 3.0",
+        "Mopidy >= 3.4",
         "paho-mqtt >= 2.0",
         "Pykka >= 2.0",
-        "setuptools",
     ],
     entry_points={
         "mopidy.ext": [
@@ -43,7 +42,9 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Multimedia :: Sound/Audio :: Players",
         "Environment :: No Input/Output (Daemon)",
     ],

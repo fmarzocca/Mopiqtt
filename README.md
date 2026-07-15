@@ -1,9 +1,19 @@
 Based on [mopidy-mqtt](https://github.com/odiroot/mopidy-mqtt)
 
 # Mopiqtt
+[![CI](https://github.com/fmarzocca/Mopiqtt/actions/workflows/ci.yml/badge.svg?branch=Development)](https://github.com/fmarzocca/Mopiqtt/actions/workflows/ci.yml)
+
  MQTT interface for Mopidy music server. Allows easy integration with Node Red or any MQTT client.
  This package is mainly useful to Node Red users, who can embed in their flows a full control over Mopidy by simple mqtt-in or mqtt-out nodes. See [Node Red examples](https://github.com/fmarzocca/Mopiqtt/tree/Development/NodeRed%20examples). Of course, it can be used by any other MQTT client too.
 
+# Requirements
+
+* Python 3.13 or later
+* Mopidy 3.4.x or Mopidy 4.0.x
+* An MQTT broker
+
+Mopidy 4 is recommended for new installations. Mopidy 3.4 compatibility is
+maintained throughout the Mopiqtt 2.x series.
 
 # Installation
 
@@ -33,6 +43,15 @@ MQTT broker requires authentication. If not, just leave blank the two values.
 *Note*: Restart Mopidy with `sudo service mopidy restart`
 
 To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
+
+### Mopidy 3 compatibility
+
+Mopidy 3 imports `pkg_resources` at runtime. If you use Mopidy 3, keep
+`setuptools` below version 82, since version 82 removed `pkg_resources`.
+Mopidy 4 does not require this constraint.
+
+Mopidy 3 compatibility is maintained in the 2.x series and may be removed in a
+future major release. New installations should use Mopidy 4.
 
 # Features
 
@@ -68,9 +87,9 @@ Information topic `mopidy/stat`.
 
 |               |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
-| Playback State|   `/plstate`  | `paused` / `stop` / `playing`         |
+| Playback State|   `/plstate`  | `paused` / `stopped` / `playing`         |
 | Volume        |   `/vol`  |               `<level(int)>`               |
-| Current track |   `/trk`  | `<artist(str)> - <title(str)> - <album(str)>` or ` ` |
+| Current track |   `/trk`  | `<title(str)>;<artist(str)>;<album(str)>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
 | Track uri (*)| `/trk_uri`   |   `<track uri (string)>`         | 
@@ -104,6 +123,12 @@ Information topic `mopidy/stat`.
 
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  
 `(**)` Note that the track must already be in the tracklist.
+
+Playlist and stream load commands validate every URI before changing the queue. If
+loading fails after the replacement starts, Mopiqtt attempts to restore the previous
+queue using Mopidy's public tracklist operations. This rollback is best-effort and
+only covers queue contents; it does not restore the current track, TLID, playback
+position, or playback state.
 
 
 # Contribute
