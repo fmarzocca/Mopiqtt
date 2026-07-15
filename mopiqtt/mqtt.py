@@ -2,6 +2,7 @@ import logging
 import random
 
 from paho.mqtt import client as mqtt
+from paho.mqtt.enums import CallbackAPIVersion
 
 
 log = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ class Comms:
         self.password = password
 
         self.client = mqtt.Client(
-            mqtt.CallbackAPIVersion.VERSION2,
+            callback_api_version=CallbackAPIVersion.VERSION2,
             client_id="mopidy-{}".format(random.randint(1000, 9999)),
         )
         self.client.on_connect = self._on_connect
@@ -72,24 +73,40 @@ class Comms:
             if result == mqtt.MQTT_ERR_SUCCESS:
                 log.debug("Subscribed to MQTT topic: %s", full_topic)
             else:
-                log.warn(
+                log.warning(
                     "Failed to subscribe to MQTT topic: %s, result: %s",
                     full_topic,
                     result,
                 )
 
     def _on_message(self, client, userdata, message):
-        topic = message.topic.split("/")[-1]
+        topic = "<unknown>"
+        payload = None
 
-        handler = getattr(self.frontend, HANDLER_PREFIX + topic, None)
-        if not handler:
-            log.warn("Cannot handle MQTT messages on topic: %s", message.topic)
-            return
+        try:
+            topic = message.topic
+            action = topic.split("/")[-1]
 
-        log.debug(
-            "Passing payload: %s to MQTT handler: %s", message.payload, handler.__name__
-        )
-        handler(value=message.payload.decode("utf8"))
+            handler = getattr(self.frontend, HANDLER_PREFIX + action, None)
+            if not handler:
+                log.warning("Cannot handle MQTT messages on topic: %s", topic)
+                return
+
+            payload = message.payload.decode("utf8")
+            log.debug(
+                "Passing payload: %s to MQTT handler: %s",
+                message.payload,
+                handler.__name__,
+            )
+            handler(value=payload)
+        except Exception:
+            if payload is None:
+                payload = getattr(message, "payload", None)
+            log.exception(
+                "Failed to process MQTT message: topic=%s payload=%r",
+                topic,
+                payload,
+            )
 
     def publish(self, subtopic, value):
         full_topic = "{}/stat/{}".format(self.topic, subtopic)
