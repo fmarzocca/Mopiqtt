@@ -6,6 +6,14 @@ Based on [mopidy-mqtt](https://github.com/odiroot/mopidy-mqtt)
  MQTT interface for Mopidy music server. Allows easy integration with Node Red or any MQTT client.
  This package is mainly useful to Node Red users, who can embed in their flows a full control over Mopidy by simple mqtt-in or mqtt-out nodes. See [Node Red examples](https://github.com/fmarzocca/Mopiqtt/tree/Development/NodeRed%20examples). Of course, it can be used by any other MQTT client too.
 
+# Requirements
+
+* Python 3.13 or later
+* Mopidy 3.4.x or Mopidy 4.0.x
+* An MQTT broker
+
+Mopidy 4 is recommended for new installations. Mopidy 3.4 compatibility is
+maintained throughout the Mopiqtt 2.x series.
 
 # Installation
 
@@ -118,7 +126,9 @@ Information topic `mopidy/stat`.
 
 Playlist and stream load commands validate every URI before changing the queue. If
 loading fails after the replacement starts, Mopiqtt attempts to restore the previous
-queue using Mopidy's public tracklist operations.
+queue using Mopidy's public tracklist operations. This rollback is best-effort and
+only covers queue contents; it does not restore the current track, TLID, playback
+position, or playback state.
 
 
 # Contribute

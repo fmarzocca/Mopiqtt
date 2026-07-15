@@ -26,7 +26,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "Mopidy >= 3.0",
+        "Mopidy >= 3.4",
         "paho-mqtt >= 2.0",
         "Pykka >= 2.0",
     ],
@@ -42,6 +42,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3.14",
         "Topic :: Multimedia :: Sound/Audio :: Players",
