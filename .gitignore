@@ -3,3 +3,5 @@ dist/
 build/
 .venv/
 mynotes.txt
+__pycache__/
+*.py[cod]
