@@ -12,7 +12,7 @@ def test_extension():
     assert schema
 
     config = ext.get_default_config()
-    assert '[mqtt]' in config
+    assert '[mopiqtt]' in config
 
 
 def test_smoke(config, core):
