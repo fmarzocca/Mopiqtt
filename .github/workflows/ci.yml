@@ -62,10 +62,20 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install PyGObject build dependencies
+      - name: Install GStreamer and PyGObject dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --yes gcc libcairo2-dev libgirepository-2.0-dev pkg-config
+          sudo apt-get install --yes \
+            gcc \
+            libcairo2-dev \
+            libgirepository-2.0-dev \
+            pkg-config \
+            gir1.2-gstreamer-1.0 \
+            gir1.2-gst-plugins-base-1.0 \
+            gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good \
+            gstreamer1.0-plugins-ugly \
+            gstreamer1.0-tools
 
       - name: Install Mopidy 3 and test dependencies
         run: |
@@ -75,6 +85,11 @@ jobs:
 
       - name: Show installed versions
         run: python -c "from importlib.metadata import version; print('Mopidy', version('Mopidy')); print('Setuptools', version('setuptools'))"
+
+      - name: Verify GStreamer bindings
+        run: |
+          python -c "import gi; gi.require_version('Gst', '1.0'); gi.require_version('GstBase', '1.0'); gi.require_version('GstPbutils', '1.0'); from gi.repository import Gst, GstBase, GstPbutils; Gst.init(None); print(Gst.version_string())"
+          gst-inspect-1.0 --version
 
       - name: Run tests
         run: python -m pytest -q
@@ -87,6 +102,11 @@ jobs:
   mopidy4-current:
     name: Mopidy 4.0 / Python ${{ matrix.python-version }}
     runs-on: ubuntu-24.04
+    container:
+      image: python:${{ matrix.python-version }}-trixie
+    defaults:
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
@@ -94,18 +114,30 @@ jobs:
           - "3.13"
           - "3.14"
     steps:
+      - name: Install GStreamer and PyGObject dependencies
+        run: |
+          apt-get update
+          apt-get install --yes \
+            ca-certificates \
+            curl \
+            git \
+            tar \
+            gcc \
+            libcairo2-dev \
+            libgirepository-2.0-dev \
+            pkg-config \
+            gir1.2-gstreamer-1.0 \
+            gir1.2-gst-plugins-base-1.0 \
+            gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good \
+            gstreamer1.0-plugins-ugly \
+            gstreamer1.0-tools
+
       - name: Check out repository
         uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install PyGObject build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes gcc libcairo2-dev libgirepository-2.0-dev pkg-config
+      - name: Show Python version
+        run: python --version
 
       - name: Install Mopidy 4 and test dependencies
         run: |
@@ -115,6 +147,11 @@ jobs:
 
       - name: Show installed version
         run: python -c "import mopidy; print('Mopidy', mopidy.__version__)"
+
+      - name: Verify GStreamer bindings
+        run: |
+          python -c "import gi; gi.require_version('Gst', '1.0'); gi.require_version('GstBase', '1.0'); gi.require_version('GstPbutils', '1.0'); from gi.repository import Gst, GstBase, GstPbutils; Gst.init(None); print(Gst.version_string())"
+          gst-inspect-1.0 --version
 
       - name: Run tests
         run: python -m pytest -q
