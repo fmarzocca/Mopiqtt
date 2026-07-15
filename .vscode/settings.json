@@ -1,5 +1,3 @@
 {
-    "files.exclude": {
-        "**/.venv/**": true
-    }
+    "python.defaultInterpreterPath": "/Users/fabio/venvs/Mopiqtt/bin/python"
 }
