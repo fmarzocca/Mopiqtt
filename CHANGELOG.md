@@ -4,6 +4,7 @@
 * Added official support for Python 3.13 and later
 * Prevented invalid MQTT payloads and handler errors from stopping subsequent messages
 * Fixed search result handling for Mopidy 4 and empty results
+* Fixed artwork fallback handling for missing, local, or unavailable images
 
 ## 1.2.1
 * Fixes failing tests [#6](https://github.com/fmarzocca/Mopiqtt/issues/6)
@@ -56,7 +57,6 @@
 
 ## 1.0.1
 * First release
-
 
 
 
