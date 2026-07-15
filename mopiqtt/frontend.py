@@ -3,7 +3,10 @@ import logging
 
 import pykka
 from mopidy.core import CoreListener
-from mopidy.audio import PlaybackState
+try:
+    from mopidy.types import PlaybackState
+except ImportError:  # Mopidy < 4
+    from mopidy.audio import PlaybackState
 from mopidy.models import SearchResult, Track, Artist, Album
 
 from .mqtt import Comms

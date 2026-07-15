@@ -1,4 +1,5 @@
 dist/
 *.egg-info
 build/
+.venv/
 mynotes.txt
