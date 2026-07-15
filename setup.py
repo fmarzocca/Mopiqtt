@@ -16,6 +16,7 @@ setup(
     name="Mopiqtt",
     version=get_version("mopiqtt/__init__.py"),
     license="Apache License, Version 2.0",
+    python_requires=">=3.13",
     description="Control mopidy music server through MQTT broker",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
