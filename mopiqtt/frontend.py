@@ -221,54 +221,128 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
         self.core.tracklist.add(uris=track)
         log.debug("Added track: %s", value)
 
+    def _resolve_tracks(self, uris):
+        if not uris:
+            return None
+
+        # Mopidy 3 and 4 implement tracklist.add(uris=...) using this same
+        # lookup and flattening each URI in order. Iterating the original URI
+        # list here also preserves duplicate playlist entries.
+        lookup = self.core.library.lookup(uris=uris).get()
+        if not lookup:
+            return None
+
+        tracks = []
+        for uri in uris:
+            uri_tracks = lookup.get(uri)
+            if not uri_tracks:
+                return None
+            tracks.extend(uri_tracks)
+
+        return tracks
+
+    def _restore_tracklist(self, tracks):
+        try:
+            self.core.tracklist.clear().get()
+            if tracks:
+                self.core.tracklist.add(tracks=tracks).get()
+        except Exception:
+            log.exception("Failed to restore previous tracklist")
+            return False
+
+        return True
+
+    def _replace_tracklist(self, tracks, shuffle=False):
+        try:
+            previous_version = self.core.tracklist.get_version().get()
+            previous_tracks = self.core.tracklist.get_tracks().get()
+            if self.core.tracklist.get_version().get() != previous_version:
+                log.warning("Tracklist changed while preparing replacement")
+                return False
+        except Exception:
+            log.exception("Cannot snapshot the current tracklist")
+            return False
+
+        try:
+            self.core.tracklist.clear().get()
+            self.core.tracklist.add(tracks=tracks).get()
+            if shuffle:
+                self.core.tracklist.shuffle().get()
+            self.core.playback.play().get()
+        except Exception:
+            log.exception("Failed to replace tracklist; restoring previous queue")
+            self._restore_tracklist(previous_tracks)
+            return False
+
+        return True
+
     def on_action_pstream(self, value):
         """Load and start a radio stream or a single track (tracklist)."""
         if not value:
-            return log.warn("Cannot load empty track to queue")
+            return log.warning("Cannot load empty track to queue")
 
-        track = []
-        track.append(value)
-        self.core.tracklist.clear()
-        self.core.tracklist.add(uris=track)
-        self.core.playback.play()
-        log.debug("Started track: %s", value)
+        try:
+            tracks = self._resolve_tracks([value])
+        except Exception:
+            log.exception("Failed to validate stream: %s", value)
+            return
+
+        if not tracks:
+            log.info("Invalid stream: %s", value)
+            return
+
+        if self._replace_tracklist(tracks):
+            log.debug("Started track: %s", value)
+
+    def _get_playlist_tracks(self, uri):
+        items = self.core.playlists.get_items(uri).get()
+        if not items:
+            return None
+
+        uris = []
+        for item in items:
+            item_uri = getattr(item, "uri", None)
+            if not item_uri:
+                return None
+            uris.append(item_uri)
+
+        return self._resolve_tracks(uris)
 
     def on_action_pload(self, value):
         """Replace current queue with playlist from URI."""
         if not value:
-            return log.warn("Cannot load unnamed playlist")
+            return log.warning("Cannot load unnamed playlist")
 
-        self.core.tracklist.clear()
-        # Read playlist (e.g. Spotify, Tidal, streams)
-        items = self.core.playlists.get_items(value)
-        tracks = []
         try:
-            for a in items.get():
-                tracks.append(a.uri)
-        except ValueError:
-            return log.info("Invalid playlist: %s", value)
-        self.core.tracklist.add(uris=tracks)
-        self.core.playback.play()
-        log.debug("Started Playlist: %s", value)
+            tracks = self._get_playlist_tracks(value)
+        except Exception:
+            log.exception("Failed to validate playlist: %s", value)
+            return
+
+        if not tracks:
+            log.info("Invalid playlist: %s", value)
+            return
+
+        if self._replace_tracklist(tracks):
+            log.debug("Started Playlist: %s", value)
 
     def on_action_ploadshfl(self, value):
         # Replace current queue with shuffled playlist from URI.
         if not value:
-            return log.warn("Cannot load unnamed playlist")
+            return log.warning("Cannot load unnamed playlist")
 
-        self.core.tracklist.clear()
-        # Read playlist (e.g. Spotify, Tidal, streams)
-        items = self.core.playlists.get_items(value)
-        tracks = []
         try:
-            for a in items.get():
-                tracks.append(a.uri)
-        except ValueError:
-            return log.info("Invalid playlist: %s", value)
-        self.core.tracklist.add(uris=tracks)
-        self.core.tracklist.shuffle()
-        self.core.playback.play()
-        log.debug("Started shuffled Playlist: %s", value)
+            tracks = self._get_playlist_tracks(value)
+        except Exception:
+            log.exception("Failed to validate playlist: %s", value)
+            return
+
+        if not tracks:
+            log.info("Invalid playlist: %s", value)
+            return
+
+        if self._replace_tracklist(tracks, shuffle=True):
+            log.debug("Started shuffled Playlist: %s", value)
 
     def on_action_clr(self, value):
         """Clear the queue (tracklist)."""
