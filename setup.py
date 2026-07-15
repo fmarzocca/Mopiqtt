@@ -29,7 +29,6 @@ setup(
         "Mopidy >= 3.0",
         "paho-mqtt >= 2.0",
         "Pykka >= 2.0",
-        "setuptools",
     ],
     entry_points={
         "mopidy.ext": [
@@ -43,7 +42,8 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Multimedia :: Sound/Audio :: Players",
         "Environment :: No Input/Output (Daemon)",
     ],

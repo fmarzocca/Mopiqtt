@@ -34,6 +34,12 @@ MQTT broker requires authentication. If not, just leave blank the two values.
 
 To check Mopidy log run `sudo tail -f /var/log/mopidy/mopidy.log`
 
+### Mopidy 3 compatibility
+
+Mopidy 3 imports `pkg_resources` at runtime. If you use Mopidy 3, keep
+`setuptools` below version 82, since version 82 removed `pkg_resources`.
+Mopidy 4 does not require this constraint.
+
 # Features
 
 * Sends information about Mopidy state on any change
@@ -68,9 +74,9 @@ Information topic `mopidy/stat`.
 
 |               |  Subtopic |                  Values                   |
 |:-------------:|:---------:|:-----------------------------------------:|
-| Playback State|   `/plstate`  | `paused` / `stop` / `playing`         |
+| Playback State|   `/plstate`  | `paused` / `stopped` / `playing`         |
 | Volume        |   `/vol`  |               `<level(int)>`               |
-| Current track |   `/trk`  | `<artist(str)> - <title(str)> - <album(str)>` or ` ` |
+| Current track |   `/trk`  | `<title(str)>;<artist(str)>;<album(str)>` or ` ` |
 | List of playlists | `/plists` | `<array of playlists name:uri>`       |
 | Track Artwork (*)| `/artw`   |   `<url of image to download>`         | 
 | Track uri (*)| `/trk_uri`   |   `<track uri (string)>`         | 
@@ -104,6 +110,10 @@ Information topic `mopidy/stat`.
 
 `(*)` If `uri_scheme` is None, all backends are asked to refresh. If `uri_scheme` is an URI scheme handled by a backend, only that backend is asked to refresh.  
 `(**)` Note that the track must already be in the tracklist.
+
+Playlist and stream load commands validate every URI before changing the queue. If
+loading fails after the replacement starts, Mopiqtt attempts to restore the previous
+queue using Mopidy's public tracklist operations.
 
 
 # Contribute

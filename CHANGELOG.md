@@ -6,6 +6,8 @@
 * Fixed search result handling for Mopidy 4 and empty results
 * Fixed artwork fallback handling for missing, local, or unavailable images
 * Preserved queues during playlist/stream validation and restored them after loading errors when Mopidy rollback operations succeed
+* Reported rejected MQTT connections and Mopidy command failures instead of silently discarding asynchronous errors
+* Prevented incomplete track metadata or a missing track index from breaking MQTT status updates
 
 ## 1.2.1
 * Fixes failing tests [#6](https://github.com/fmarzocca/Mopiqtt/issues/6)
@@ -58,6 +60,3 @@
 
 ## 1.0.1
 * First release
-
-
-

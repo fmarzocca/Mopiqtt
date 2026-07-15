@@ -60,6 +60,10 @@ class Comms:
         log.debug("Disconnected from MQTT broker")
 
     def _on_connect(self, client, userdata, flags, rc, properties):
+        if rc != 0:
+            log.error("Failed to connect to MQTT broker, result: %s", rc)
+            return
+
         log.info("Successfully connected to MQTT broker, result :%s", rc)
 
         for name in dir(self.frontend):
