@@ -1,4 +1,13 @@
 # Changelog
+## Unreleased
+* Added compatibility with Mopidy 4 while retaining Mopidy 3 support
+* Added official support for Python 3.13 and later
+* Prevented invalid MQTT payloads and handler errors from stopping subsequent messages
+* Fixed search result handling for Mopidy 4 and empty results
+
+## 1.2.1
+* Fixes failing tests [#6](https://github.com/fmarzocca/Mopiqtt/issues/6)
+
 ## 1.2.0
 * Added track uri message
 
@@ -47,11 +56,6 @@
 
 ## 1.0.1
 * First release
-
-
-
-
-
 
 
 
