@@ -308,7 +308,35 @@ class MopiqttFrontend(pykka.ThreadingActor, CoreListener):
                 return None
             uris.append(item_uri)
 
-        return self._resolve_tracks(uris)
+        lookup = self.core.library.lookup(uris=uris).get()
+        if not lookup:
+            log.warning("No tracks could be resolved for playlist: %s", uri)
+            return None
+
+        tracks = []
+        skipped = []
+        for item_uri in uris:
+            uri_tracks = lookup.get(item_uri)
+            if not uri_tracks:
+                skipped.append(item_uri)
+                continue
+            tracks.extend(uri_tracks)
+
+        if skipped:
+            log.warning(
+                "Playlist %s contains %d tracks; %d could not be resolved and were skipped",
+                uri,
+                len(uris),
+                len(skipped),
+            )
+            for skipped_uri in skipped:
+                log.warning("Skipped unresolved track: %s", skipped_uri)
+
+        if not tracks:
+            log.warning("No tracks could be resolved for playlist: %s", uri)
+            return None
+
+        return tracks
 
     def on_action_pload(self, value):
         """Replace current queue with playlist from URI."""

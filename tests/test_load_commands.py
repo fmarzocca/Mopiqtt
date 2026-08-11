@@ -165,12 +165,12 @@ def test_pload_keeps_queue_when_playlist_item_has_no_uri():
     playback.play.assert_not_called()
 
 
-def test_pload_keeps_queue_when_any_playlist_item_is_invalid():
+def test_pload_skips_unresolved_playlist_items_and_keeps_valid_order(caplog):
     previous = Track(name="Previous", uri="test:previous")
     valid = Track(name="Valid", uri="test:valid")
     missing_uri = "test:missing"
     items = [SimpleNamespace(uri=valid.uri), SimpleNamespace(uri=missing_uri)]
-    frontend, tracklist, _, _, playback = make_frontend(
+    frontend, tracklist, _, lookup, playback = make_frontend(
         [previous],
         playlist_items=items,
         lookup={valid.uri: [valid], missing_uri: []},
@@ -178,9 +178,27 @@ def test_pload_keeps_queue_when_any_playlist_item_is_invalid():
 
     frontend.on_action_pload("test:playlist")
 
+    assert tracklist.tracks == [valid]
+    lookup.assert_called_once_with(uris=[valid.uri, missing_uri])
+    playback.play.assert_called_once_with()
+    assert "contains 2 tracks; 1 could not be resolved and were skipped" in caplog.text
+    assert f"Skipped unresolved track: {missing_uri}" in caplog.text
+
+
+def test_pload_keeps_queue_when_all_playlist_items_are_unresolved(caplog):
+    previous = Track(name="Previous", uri="test:previous")
+    missing_uris = ["test:missing-1", "test:missing-2"]
+    items = [SimpleNamespace(uri=item_uri) for item_uri in missing_uris]
+    frontend, tracklist, _, _, playback = make_frontend(
+        [previous], playlist_items=items, lookup={item_uri: [] for item_uri in missing_uris}
+    )
+
+    frontend.on_action_pload("test:playlist")
+
     assert tracklist.tracks == [previous]
     tracklist.clear.assert_not_called()
     playback.play.assert_not_called()
+    assert "No tracks could be resolved for playlist: test:playlist" in caplog.text
 
 
 def test_pload_preserves_order_and_duplicate_items():
@@ -235,6 +253,24 @@ def test_ploadshfl_replaces_and_shuffles_valid_playlist():
     assert sorted(track.uri for track in tracklist.tracks) == sorted(
         [first.uri, second.uri]
     )
+    tracklist.shuffle.assert_called_once_with()
+    playback.play.assert_called_once_with()
+
+
+def test_ploadshfl_skips_unresolved_items_before_shuffling():
+    previous = Track(name="Previous", uri="test:previous")
+    valid = Track(name="Valid", uri="test:valid")
+    missing_uri = "test:missing"
+    items = [SimpleNamespace(uri=missing_uri), SimpleNamespace(uri=valid.uri)]
+    frontend, tracklist, _, _, playback = make_frontend(
+        [previous],
+        playlist_items=items,
+        lookup={missing_uri: [], valid.uri: [valid]},
+    )
+
+    frontend.on_action_ploadshfl("test:playlist")
+
+    assert tracklist.tracks == [valid]
     tracklist.shuffle.assert_called_once_with()
     playback.play.assert_called_once_with()
 

@@ -1,6 +1,9 @@
 # Changelog
 ## Unreleased
 
+### Fixed
+* Playlist loading now skips unresolved tracks while preserving valid track order and duplicates; playlists with no resolvable tracks leave the current queue unchanged
+
 ## 2.0.0 - 2026-07-15
 
 ### Compatibility
