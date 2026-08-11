@@ -1,8 +1,10 @@
 # Changelog
 ## Unreleased
 
+## 2.0.1 - 2026-08-11
+
 ### Fixed
-* Playlist loading now skips unresolved tracks while preserving valid track order and duplicates; playlists with no resolvable tracks leave the current queue unchanged
+* Playlist loading now skips tracks that Mopidy cannot resolve while preserving valid tracks, their original order, and valid duplicates; if no track can be resolved, the current queue remains unchanged
 
 ## 2.0.0 - 2026-07-15
 
